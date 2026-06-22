@@ -1,0 +1,5 @@
+sku,name,slug,category,subcategory,price,oldPrice,stock,tags,condition,description,seoTitle,seoDescription,imageName,featured,isNew,isChancadito,isPreorder,isSoldOut
+ONI-FIG-001,Figura Gojo Satoru,figura-gojo-satoru,Figuras,Banpresto,189.90,,8,Jujutsu Kaisen,NUEVO,Figura PVC 18cm edición Hidden Inventory.,Figura Gojo Satoru Jujutsu Kaisen,Compra la figura de Gojo Satoru de Jujutsu Kaisen en ONISTORE.,gojo.jpg,true,true,false,false,false
+ONI-MNG-014,Manga Chainsaw Man Vol. 7,manga-chainsaw-man-vol-7,Manga,Tankōbon,29.90,,15,Chainsaw Man,NUEVO,Volumen 7 edición español.,,,csm7.jpg,false,true,false,false,false
+ONI-FIG-099,Figura Luffy Gear 5 (caja con detalle),,Figuras,Bandai,169.90,229.90,1,One Piece,NUEVO,Outlet: figura perfecta caja con golpe leve.,,,luffy.jpg,false,false,true,false,false
+ONI-PRE-002,Figura Nezuko Preventa,,Figuras,Aniplex,259.90,,0,Demon Slayer,PREORDER,Preventa llega en 60 días.,,,,false,false,false,true,false

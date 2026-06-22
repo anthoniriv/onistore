@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="h3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#161616"/>
+      <stop offset="100%" stop-color="#0D0D0D"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#h3)"/>
+  <circle cx="1200" cy="430" r="320" fill="#C81010" opacity="0.18"/>
+  <circle cx="1200" cy="430" r="320" fill="none" stroke="#C81010" stroke-width="4" opacity="0.45"/>
+  <text x="1200" y="560" font-family="serif" font-size="420" fill="#C81010" text-anchor="middle" opacity="0.75">鬼</text>
+</svg>

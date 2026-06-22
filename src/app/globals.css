@@ -1,26 +1,88 @@
 @import "tailwindcss";
 
+/* ============================ ONISTORE — Design tokens ============================ */
+/* Paleta oficial ONISTORE:
+   Onyx Black #0D0D0D · Oni Red #C81010 · Charcoal #2B2B2B · Stone Gray #E5E5E5 · Pure White #FFFFFF
+   (la marca no usa dorado: --color-oni-gold queda mapeado a Stone Gray) */
+@theme {
+  --color-oni-black: #0d0d0d;
+  --color-oni-ink: #181818;
+  --color-oni-surface: #232323;
+  --color-oni-line: #333336;
+  --color-oni-red: #c81010;
+  --color-oni-red-dark: #9c0c0c;
+  --color-oni-red-soft: #e63b3b;
+  --color-oni-stone: #e5e5e5;
+  --color-oni-gold: #e5e5e5;
+  --color-oni-bone: #f4f4f4;
+  --color-oni-ash: #9a9a9a;
+
+  --font-display: var(--font-oxanium), "Arial Narrow", sans-serif;
+  --font-sans: var(--font-montserrat), system-ui, sans-serif;
+  --font-jp: var(--font-noto-jp), serif;
+
+  --radius-oni: 0.5rem;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: var(--color-oni-black);
+  --foreground: var(--color-oni-bone);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Títulos display estilo póster anime */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* Fondo limpio (negro plano). La textura se desactivó a pedido. */
+.oni-grain {
+  background-color: var(--color-oni-black);
+}
+
+.oni-stroke {
+  box-shadow: inset 0 0 0 1px var(--color-oni-line);
+}
+
+/* Scrollbar horizontal oculto para carruseles */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes oni-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: oni-marquee 22s linear infinite;
+}
+
+@keyframes oni-fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade {
+  animation: oni-fade 0.5s ease both;
 }
