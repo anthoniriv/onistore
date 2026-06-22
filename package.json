@@ -11,6 +11,7 @@
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
     "db:seed:genres": "tsx prisma/seed-genres.ts",
+    "db:migrate:sqlite": "tsx scripts/migrate-sqlite-to-postgres.ts",
     "import:catalog": "tsx scripts/import-catalog.ts",
     "db:reset": "prisma db push --force-reset && tsx prisma/seed.ts",
     "db:studio": "prisma studio"
