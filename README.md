@@ -42,7 +42,8 @@ Gestiona: **productos** (con subida de imágenes), **pedidos** (estados + compro
 ## ⚙️ Configuración (`.env`)
 
 ```
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="postgresql://postgres.ifrfvffrxmcnjlmhectr:...@aws-0-us-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://postgres:...@db.ifrfvffrxmcnjlmhectr.supabase.co:5432/postgres"
 AUTH_SECRET="..."                   # secreto de sesión (cambiar en prod)
 NEXT_PUBLIC_WHATSAPP="51993109998"  # WhatsApp del negocio (intl, sin +)
 NEXT_PUBLIC_YAPE_NUMBER="993109998"
@@ -63,12 +64,12 @@ ADMIN_EMAIL / ADMIN_PASSWORD
 
 ---
 
-## 🌐 Deploy a producción (Vercel + Postgres)
+## 🌐 Deploy a producción (Vercel + Supabase)
 
-1. **Base de datos**: crea un Postgres (Neon / Vercel Postgres).
-2. En `prisma/schema.prisma` cambia `provider = "sqlite"` → `provider = "postgresql"`.
-3. Pon el `DATABASE_URL` real en Vercel.
-4. `npx prisma db push && npx prisma db seed` contra la BD nueva.
+1. **Base de datos**: crea un proyecto Supabase.
+2. En Vercel configura `DATABASE_URL` con el connection pooler y `DIRECT_URL` con la conexión directa.
+3. Configura también `AUTH_SECRET`, `NEXT_PUBLIC_WHATSAPP`, `NEXT_PUBLIC_YAPE_NUMBER` y `NEXT_PUBLIC_YAPE_NAME`.
+4. Ejecuta `npx prisma db push && npx prisma db seed` contra la BD nueva.
 5. **Imágenes**: en Vercel el disco es de solo lectura. Cambia `src/app/api/upload/route.ts`
    para usar `@vercel/blob` (`put`) en vez de escribir en `/public/uploads`. El resto del flujo no cambia.
 

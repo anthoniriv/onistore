@@ -48,4 +48,6 @@ async function main() {
   console.log(`✅ ${GENRES.length} géneros cargados (sin tocar productos)`);
 }
 
-main().catch((e) => { console.error(e); process.exit(1); }).finally(() => prisma.$disconnect());
+if (process.argv[1]?.endsWith("seed-genres.ts")) {
+  main().catch((e) => { console.error(e); process.exit(1); }).finally(() => prisma.$disconnect());
+}

@@ -1,15 +1,15 @@
 // ONISTORE — esquema de base de datos
-// Dev: SQLite (instantáneo, sin setup). Prod: cambiar provider a "postgresql"
-// y DATABASE_URL al string de Neon/Vercel Postgres. El modelo es portable
-// (sin enums nativos) para que el swap sea de una línea.
+// Producción: Supabase/Postgres. Usa DATABASE_URL para runtime y DIRECT_URL
+// para operaciones Prisma como db push/seed contra la conexión directa.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // ----------------------------- Catálogo -----------------------------
