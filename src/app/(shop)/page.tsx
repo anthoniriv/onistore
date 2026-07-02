@@ -93,7 +93,7 @@ export default async function HomePage() {
         ))}
       </section>
 
-      <section className="my-10 rounded-oni border border-oni-line bg-oni-ink p-6 text-center">
+      <section className="my-6 rounded-oni border border-oni-line bg-oni-ink p-6 text-center sm:my-10">
         <p className="font-jp text-sm text-oni-gold">本物の魂</p>
         <h2 className="mt-1 font-display text-2xl text-oni-bone sm:text-3xl">¿No encuentras lo que buscas?</h2>
         <p className="mt-1 text-sm text-oni-ash">Escríbenos y lo conseguimos para ti.</p>

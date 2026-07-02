@@ -10,7 +10,7 @@ export async function SiteFooter() {
   const wa = waLink("¡Hola ONISTORE! 👹");
 
   return (
-    <footer className="mt-12 border-t border-oni-line bg-oni-ink">
+    <footer className="mt-10 border-t border-oni-line bg-oni-ink pb-20 md:mt-12 md:pb-0">
       {/* Tira de beneficios */}
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-3 px-4 py-6 sm:grid-cols-3 md:px-6">
         {[
