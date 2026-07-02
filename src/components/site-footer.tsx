@@ -14,9 +14,9 @@ export async function SiteFooter() {
       {/* Tira de beneficios */}
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-3 px-4 py-6 sm:grid-cols-3 md:px-6">
         {[
-          { icon: Truck, t: "Envíos a todo el Perú", s: "Costo según destino" },
-          { icon: MapPin, t: "Entregas en Arequipa", s: "Arenales y Centro Cívico" },
-          { icon: Clock, t: "LIVE Vie–Dom 7–9PM", s: "Sorteos y drops" },
+          { icon: Truck, t: "Envío a todo el Perú", s: "Coordinamos por WhatsApp" },
+          { icon: MapPin, t: "Entregas presenciales", s: "Arenales y Centro Cívico" },
+          { icon: Clock, t: "LIVE Viernes a Domingo 7–9PM", s: "Sorteos y drops" },
         ].map((b) => (
           <div key={b.t} className="flex items-center gap-3 rounded-md border border-oni-line bg-oni-surface px-4 py-3">
             <b.icon className="h-6 w-6 text-oni-red" />
@@ -38,10 +38,10 @@ export async function SiteFooter() {
             <a href={wa} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="grid h-10 w-10 place-items-center rounded-full border border-oni-line text-oni-bone hover:bg-oni-red hover:text-white">
               <WhatsAppIcon className="h-5 w-5" />
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="grid h-10 w-10 place-items-center rounded-full border border-oni-line text-oni-bone hover:bg-oni-red hover:text-white">
+            <a href="https://instagram.com/onistore.jp" target="_blank" rel="noopener noreferrer" aria-label="Instagram @onistore.jp" className="grid h-10 w-10 place-items-center rounded-full border border-oni-line text-oni-bone hover:bg-oni-red hover:text-white">
               <InstagramIcon className="h-5 w-5" />
             </a>
-            <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="grid h-10 w-10 place-items-center rounded-full border border-oni-line text-oni-bone hover:bg-oni-red hover:text-white">
+            <a href="https://tiktok.com/@onistore.jp" target="_blank" rel="noopener noreferrer" aria-label="TikTok @onistore.jp" className="grid h-10 w-10 place-items-center rounded-full border border-oni-line text-oni-bone hover:bg-oni-red hover:text-white">
               <TikTokIcon className="h-5 w-5" />
             </a>
           </div>

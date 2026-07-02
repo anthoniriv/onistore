@@ -21,7 +21,7 @@ export default function AdminLogin() {
           <input
             name="email"
             type="email"
-            placeholder="correo@onistore.pe"
+            placeholder="correo@onistore.store"
             required
             className="h-11 w-full rounded-md border border-oni-line bg-oni-surface px-3 text-sm outline-none focus:border-oni-red"
           />

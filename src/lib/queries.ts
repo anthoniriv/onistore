@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { prisma } from "./prisma";
 import type { Prisma } from "@prisma/client";
 
@@ -60,6 +61,7 @@ export async function getCatalog(params: CatalogParams) {
 
   const [items, total] = await Promise.all([
     prisma.product.findMany({
+      relationLoadStrategy: "join",
       where,
       orderBy,
       include: { images: { orderBy: { order: "asc" }, take: 1 }, category: true },
@@ -74,6 +76,7 @@ export async function getCatalog(params: CatalogParams) {
 
 export async function getProductBySlug(slug: string) {
   return prisma.product.findUnique({
+    relationLoadStrategy: "join",
     where: { slug },
     include: {
       images: { orderBy: { order: "asc" } },
@@ -86,26 +89,37 @@ export async function getProductBySlug(slug: string) {
 
 export async function getRelated(categoryId: string, excludeId: string, take = 6) {
   return prisma.product.findMany({
+    relationLoadStrategy: "join",
     where: { categoryId, active: true, id: { not: excludeId } },
     include: { images: { take: 1, orderBy: { order: "asc" } }, category: true },
     take,
   });
 }
 
-export async function getCategories() {
-  return prisma.category.findMany({ orderBy: { order: "asc" } });
-}
+// Data de referencia casi-estática (categorías/tags/géneros no se editan desde el
+// admin, solo por seed). Se cachea fuerte para no golpear la DB remota en cada
+// request. El header consume getCategories en TODAS las páginas.
+export const getCategories = unstable_cache(
+  () => prisma.category.findMany({ orderBy: { order: "asc" } }),
+  ["categories"],
+  { tags: ["categories"], revalidate: 3600 },
+);
 
-export async function getTags() {
-  return prisma.tag.findMany({ orderBy: { name: "asc" } });
-}
+export const getTags = unstable_cache(
+  () => prisma.tag.findMany({ orderBy: { name: "asc" } }),
+  ["tags"],
+  { tags: ["tags"], revalidate: 3600 },
+);
 
-export async function getGenres() {
-  return prisma.genre.findMany({ orderBy: [{ kind: "asc" }, { order: "asc" }] });
-}
+export const getGenres = unstable_cache(
+  () => prisma.genre.findMany({ orderBy: [{ kind: "asc" }, { order: "asc" }] }),
+  ["genres"],
+  { tags: ["genres"], revalidate: 3600 },
+);
 
 export async function getFeatured(take = 8) {
   return prisma.product.findMany({
+    relationLoadStrategy: "join",
     where: { active: true, featured: true },
     include: { images: { take: 1, orderBy: { order: "asc" } }, category: true },
     take,
@@ -114,6 +128,7 @@ export async function getFeatured(take = 8) {
 
 export async function getLatest(take = 10) {
   return prisma.product.findMany({
+    relationLoadStrategy: "join",
     where: { active: true },
     include: { images: { take: 1, orderBy: { order: "asc" } }, category: true },
     orderBy: { createdAt: "desc" },
@@ -123,6 +138,7 @@ export async function getLatest(take = 10) {
 
 export async function getChancaditos(take = 8) {
   return prisma.product.findMany({
+    relationLoadStrategy: "join",
     where: { active: true, isChancadito: true },
     include: { images: { take: 1, orderBy: { order: "asc" } }, category: true },
     take,
@@ -134,10 +150,15 @@ export async function searchProducts(q: string, take = 6) {
   const tokens = q.trim().split(/\s+/).filter(Boolean);
   if (!tokens.length) return [];
   return prisma.product.findMany({
+    relationLoadStrategy: "join",
     where: {
       active: true,
       AND: tokens.map((t) => ({
-        OR: [{ name: { contains: t } }, { anime: { contains: t } }, { brand: { contains: t } }],
+        OR: [
+          { name: { contains: t, mode: "insensitive" } },
+          { anime: { contains: t, mode: "insensitive" } },
+          { brand: { contains: t, mode: "insensitive" } },
+        ],
       })),
     },
     include: { images: { take: 1, orderBy: { order: "asc" } } },
@@ -155,6 +176,7 @@ export async function getProductSuggestions(q: string, excludeId?: string) {
   if (!tokens.length) return [];
 
   const candidates = await prisma.product.findMany({
+    relationLoadStrategy: "join",
     where: {
       id: excludeId ? { not: excludeId } : undefined,
       OR: tokens.flatMap((t) => [{ name: { contains: t } }, { anime: { contains: t } }]),
@@ -197,9 +219,13 @@ export async function getProductSuggestions(q: string, excludeId?: string) {
   }));
 }
 
-export async function getBanners() {
-  return prisma.banner.findMany({ where: { active: true }, orderBy: { order: "asc" } });
-}
+// Banners sí se editan desde el admin → cache con tag "banners" que se invalida
+// en saveBanner/deleteBanner via revalidateTag (revalidatePath NO invalida unstable_cache).
+export const getBanners = unstable_cache(
+  () => prisma.banner.findMany({ where: { active: true }, orderBy: { order: "asc" } }),
+  ["banners"],
+  { tags: ["banners"], revalidate: 300 },
+);
 
 export type CatalogItem = Awaited<ReturnType<typeof getCatalog>>["items"][number];
 export type ProductDetail = NonNullable<Awaited<ReturnType<typeof getProductBySlug>>>;

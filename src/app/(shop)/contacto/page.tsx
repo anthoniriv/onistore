@@ -44,8 +44,8 @@ export default function ContactoPage() {
               <div>
                 <p className="font-semibold text-oni-bone">Síguenos</p>
                 <div className="mt-2 flex gap-2">
-                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="grid h-10 w-10 place-items-center rounded-full border border-oni-line hover:bg-oni-red hover:text-white"><InstagramIcon className="h-5 w-5" /></a>
-                  <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="grid h-10 w-10 place-items-center rounded-full border border-oni-line hover:bg-oni-red hover:text-white"><TikTokIcon className="h-5 w-5" /></a>
+                  <a href="https://instagram.com/onistore.jp" target="_blank" rel="noopener noreferrer" aria-label="Instagram @onistore.jp" className="grid h-10 w-10 place-items-center rounded-full border border-oni-line hover:bg-oni-red hover:text-white"><InstagramIcon className="h-5 w-5" /></a>
+                  <a href="https://tiktok.com/@onistore.jp" target="_blank" rel="noopener noreferrer" aria-label="TikTok @onistore.jp" className="grid h-10 w-10 place-items-center rounded-full border border-oni-line hover:bg-oni-red hover:text-white"><TikTokIcon className="h-5 w-5" /></a>
                 </div>
               </div>
             </div>

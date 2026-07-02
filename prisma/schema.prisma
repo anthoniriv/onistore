@@ -3,7 +3,8 @@
 // para operaciones Prisma como db push/seed contra la conexión directa.
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
@@ -127,6 +128,7 @@ model Banner {
   ctaHref   String?
   order     Int      @default(0)
   active    Boolean  @default(true)
+  showText  Boolean  @default(true) // false = texto quemado en la imagen, el slider no dibuja overlay
   createdAt DateTime @default(now())
 }
 

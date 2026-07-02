@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { LayoutDashboard, Package, ShoppingCart, Images, MessageSquare, Ticket, ExternalLink, LogOut } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, Images, MessageSquare, Ticket, TrendingUp, ExternalLink, LogOut } from "lucide-react";
 import { getSession } from "@/lib/auth";
 import { OniLogo } from "@/components/brand";
 import { logoutAction } from "../actions";
@@ -8,6 +8,7 @@ import { AdminNavLink } from "@/components/admin/nav-link";
 
 const NAV = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { href: "/admin/ventas", label: "Ventas", icon: TrendingUp },
   { href: "/admin/productos", label: "Productos", icon: Package },
   { href: "/admin/pedidos", label: "Pedidos", icon: ShoppingCart },
   { href: "/admin/cupones", label: "Cupones", icon: Ticket },

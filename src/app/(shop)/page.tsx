@@ -81,7 +81,7 @@ export default async function HomePage() {
         {[
           { icon: ShieldCheck, t: "Productos garantizados", s: "Calidad verificada antes de enviar" },
           { icon: Truck, t: "Envíos a todo el Perú", s: "Coordinamos por WhatsApp" },
-          { icon: Radio, t: "LIVE Vie–Dom", s: "Sorteos, drops y precios especiales" },
+          { icon: Radio, t: "LIVE Viernes a Domingo", s: "Sorteos, drops y precios especiales" },
         ].map((b) => (
           <div key={b.t} className="flex items-center gap-3 rounded-oni border border-oni-line bg-oni-ink p-4">
             <b.icon className="h-7 w-7 text-oni-gold" />

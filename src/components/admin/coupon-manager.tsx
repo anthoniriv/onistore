@@ -160,7 +160,7 @@ function CouponForm({ initial, onClose }: { initial?: Coupon; onClose: () => voi
         </label>
       </div>
       <label className="mt-3 flex cursor-pointer items-center gap-2 text-sm">
-        <input type="checkbox" checked={f.active} onChange={(e) => set("active", e.target.checked)} className="h-4 w-4 accent-[#c81010]" /> Activo
+        <input type="checkbox" checked={f.active} onChange={(e) => set("active", e.target.checked)} className="h-4 w-4 accent-[#7b5ea7]" /> Activo
       </label>
       {error && <p className="mt-2 text-sm text-oni-red-soft">{error}</p>}
       <button disabled={saving || !f.code} onClick={submit}

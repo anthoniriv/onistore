@@ -12,7 +12,7 @@ export function OniMark({ className, title = "ONISTORE" }: { className?: string;
   );
 }
 
-/** Logo horizontal: ícono + wordmark "ONISTORE" en la tipografía display (Oxanium) */
+/** Logo horizontal: ícono + wordmark "ONISTORE" en la tipografía display (Bebas Neue) */
 export function OniLogo({
   className,
   markClassName,
@@ -27,8 +27,7 @@ export function OniLogo({
       <OniMark className={cn("h-9 w-9", markClassName)} />
       {showText && (
         <span className="font-display text-xl font-extrabold leading-none tracking-[0.06em] text-oni-bone">
-          ONISTORE
-          <span className="text-oni-red">:</span>
+          ONI<span className="text-oni-gold">STORE</span>
         </span>
       )}
     </span>

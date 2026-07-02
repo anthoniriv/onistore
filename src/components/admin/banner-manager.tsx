@@ -13,9 +13,10 @@ type Banner = {
   ctaHref: string | null;
   order: number;
   active: boolean;
+  showText: boolean;
 };
 
-const empty = { title: "", subtitle: "", imageUrl: "", ctaText: "", ctaHref: "", order: 0, active: true };
+const empty = { title: "", subtitle: "", imageUrl: "", ctaText: "", ctaHref: "", order: 0, active: true, showText: true };
 
 export function BannerManager({ banners }: { banners: Banner[] }) {
   const [editing, setEditing] = useState<string | "new" | null>(null);
@@ -76,6 +77,7 @@ function BannerForm({ initial, onClose }: { initial?: Banner; onClose: () => voi
     ctaHref: initial?.ctaHref ?? "",
     order: initial?.order ?? 0,
     active: initial?.active ?? true,
+    showText: initial?.showText ?? true,
   });
   const [uploading, setUploading] = useState(false);
   const [saving, startSave] = useTransition();
@@ -107,7 +109,8 @@ function BannerForm({ initial, onClose }: { initial?: Banner; onClose: () => voi
         <label className="text-sm"><span className="mb-1 block text-oni-ash">Texto del botón</span><input value={f.ctaText} onChange={(e) => set("ctaText", e.target.value)} className={inp} /></label>
         <label className="text-sm"><span className="mb-1 block text-oni-ash">Link del botón</span><input value={f.ctaHref} onChange={(e) => set("ctaHref", e.target.value)} placeholder="/catalogo" className={inp} /></label>
         <label className="text-sm"><span className="mb-1 block text-oni-ash">Orden</span><input type="number" value={f.order} onChange={(e) => set("order", Number(e.target.value))} className={inp} /></label>
-        <label className="flex items-end gap-2 text-sm"><input type="checkbox" checked={f.active} onChange={(e) => set("active", e.target.checked)} className="mb-2 h-4 w-4 accent-[#d32027]" /> <span className="mb-2">Activo</span></label>
+        <label className="flex items-end gap-2 text-sm"><input type="checkbox" checked={f.active} onChange={(e) => set("active", e.target.checked)} className="mb-2 h-4 w-4 accent-[#7b5ea7]" /> <span className="mb-2">Activo</span></label>
+        <label className="flex items-end gap-2 text-sm sm:col-span-2"><input type="checkbox" checked={f.showText} onChange={(e) => set("showText", e.target.checked)} className="mb-2 h-4 w-4 accent-[#7b5ea7]" /> <span className="mb-2">Mostrar texto/botón encima <span className="text-oni-ash">(desactívalo si el banner ya trae el texto quemado en la imagen)</span></span></label>
       </div>
 
       <div className="mt-3 flex items-center gap-3">

@@ -138,7 +138,7 @@ export function SearchBar({ variant = "inline" }: { variant?: "inline" | "icon" 
               </button>
             </form>
             <div className="mx-auto mt-3 max-w-lg">
-              <Results results={results} loading={loading} q={q} onPick={() => setOpen(false)} />
+              <Results results={results} loading={loading} q={q} onPick={() => setTimeout(() => setOpen(false), 0)} />
             </div>
           </div>,
           document.body
@@ -167,7 +167,7 @@ export function SearchBar({ variant = "inline" }: { variant?: "inline" | "icon" 
       </form>
       {focused && (
         <div className="absolute left-0 right-0 top-12 z-[60]">
-          <Results results={results} loading={loading} q={q} onPick={() => setFocused(false)} />
+          <Results results={results} loading={loading} q={q} onPick={() => setTimeout(() => setFocused(false), 0)} />
         </div>
       )}
     </div>

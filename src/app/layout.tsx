@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Montserrat, Oxanium } from "next/font/google";
+import { Bebas_Neue, DM_Sans, Noto_Serif_JP } from "next/font/google";
 import "./globals.css";
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site";
 import { WHATSAPP } from "@/lib/whatsapp";
 
-const montserrat = Montserrat({ variable: "--font-montserrat", subsets: ["latin"], display: "swap" });
-const oxanium = Oxanium({ variable: "--font-oxanium", weight: ["600", "700", "800"], subsets: ["latin"], display: "swap" });
+const bebas = Bebas_Neue({ variable: "--font-bebas", weight: "400", subsets: ["latin"], display: "swap" });
+const dmSans = DM_Sans({ variable: "--font-dm-sans", subsets: ["latin"], display: "swap" });
+const notoJp = Noto_Serif_JP({ variable: "--font-noto-jp", weight: ["400", "700"], preload: false, display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -35,7 +36,7 @@ const orgJsonLd = {
   image: `${SITE_URL}/brand/oni-icon.png`,
   description: SITE_DESCRIPTION,
   areaServed: "PE",
-  sameAs: ["https://instagram.com", "https://tiktok.com"],
+  sameAs: ["https://instagram.com/onistore.jp", "https://tiktok.com/@onistore.jp"],
   contactPoint: {
     "@type": "ContactPoint",
     contactType: "sales",
@@ -47,7 +48,7 @@ const orgJsonLd = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es" className={`${montserrat.variable} ${oxanium.variable} h-full antialiased`}>
+    <html lang="es" className={`${bebas.variable} ${dmSans.variable} ${notoJp.variable} h-full antialiased`}>
       <body className="min-h-full bg-oni-black text-oni-bone">
         {children}
         <script

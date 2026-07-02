@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { createSession, destroySession, getSession } from "@/lib/auth";
@@ -122,12 +122,78 @@ export async function toggleProductActive(id: string, active: boolean) {
   revalidatePath("/admin/productos");
 }
 
+// --- Acciones masivas de productos ---
+
+function revalidateCatalog() {
+  revalidatePath("/admin/productos");
+  revalidatePath("/catalogo");
+  revalidatePath("/");
+}
+
+export async function deleteProducts(ids: string[]) {
+  await requireAdmin();
+  if (!ids.length) return;
+  await prisma.product.deleteMany({ where: { id: { in: ids } } });
+  revalidateCatalog();
+}
+
+export async function setProductsActive(ids: string[], active: boolean) {
+  await requireAdmin();
+  if (!ids.length) return;
+  await prisma.product.updateMany({ where: { id: { in: ids } }, data: { active } });
+  revalidateCatalog();
+}
+
+export async function setProductsCategory(ids: string[], categoryId: string) {
+  await requireAdmin();
+  if (!ids.length || !categoryId) return;
+  await prisma.product.updateMany({ where: { id: { in: ids } }, data: { categoryId } });
+  revalidateCatalog();
+}
+
+export async function setProductsCondition(ids: string[], condition: string) {
+  await requireAdmin();
+  if (!ids.length || !condition) return;
+  await prisma.product.updateMany({ where: { id: { in: ids } }, data: { condition } });
+  revalidateCatalog();
+}
+
+export async function setProductsChancadito(ids: string[], isChancadito: boolean) {
+  await requireAdmin();
+  if (!ids.length) return;
+  await prisma.product.updateMany({ where: { id: { in: ids } }, data: { isChancadito } });
+  revalidateCatalog();
+}
+
 // ----------------------------- Pedidos -----------------------------
 
 export async function setOrderStatus(id: string, status: string) {
   await requireAdmin();
   await prisma.order.update({ where: { id }, data: { status } });
   revalidatePath("/admin/pedidos");
+}
+
+export async function deleteOrder(id: string) {
+  await requireAdmin();
+  await prisma.order.delete({ where: { id } }); // OrderItem se borra en cascada
+  revalidatePath("/admin/pedidos");
+  revalidatePath("/admin");
+}
+
+export async function deleteOrders(ids: string[]) {
+  await requireAdmin();
+  if (!ids.length) return;
+  await prisma.order.deleteMany({ where: { id: { in: ids } } });
+  revalidatePath("/admin/pedidos");
+  revalidatePath("/admin");
+}
+
+export async function setOrdersStatus(ids: string[], status: string) {
+  await requireAdmin();
+  if (!ids.length) return;
+  await prisma.order.updateMany({ where: { id: { in: ids } }, data: { status } });
+  revalidatePath("/admin/pedidos");
+  revalidatePath("/admin");
 }
 
 // ----------------------------- Banners -----------------------------
@@ -141,6 +207,7 @@ export async function saveBanner(input: {
   ctaHref?: string;
   order: number;
   active: boolean;
+  showText: boolean;
 }) {
   await requireAdmin();
   const data = {
@@ -151,9 +218,11 @@ export async function saveBanner(input: {
     ctaHref: input.ctaHref || null,
     order: input.order,
     active: input.active,
+    showText: input.showText,
   };
   if (input.id) await prisma.banner.update({ where: { id: input.id }, data });
   else await prisma.banner.create({ data });
+  revalidateTag("banners", "max");
   revalidatePath("/admin/banners");
   revalidatePath("/");
 }
@@ -161,6 +230,7 @@ export async function saveBanner(input: {
 export async function deleteBanner(id: string) {
   await requireAdmin();
   await prisma.banner.delete({ where: { id } });
+  revalidateTag("banners", "max");
   revalidatePath("/admin/banners");
   revalidatePath("/");
 }

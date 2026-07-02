@@ -1,24 +1,24 @@
 @import "tailwindcss";
 
 /* ============================ ONISTORE — Design tokens ============================ */
-/* Paleta oficial ONISTORE:
-   Onyx Black #0D0D0D · Oni Red #C81010 · Charcoal #2B2B2B · Stone Gray #E5E5E5 · Pure White #FFFFFF
-   (la marca no usa dorado: --color-oni-gold queda mapeado a Stone Gray) */
+/* Paleta oficial ONISTORE — Brand Kit 2025 (Yoru × Inca):
+   Yoru #12101E · Kage #1E1A30 · Oni Morado #7B5EA7 · Inca Gold #C4A84A · Washi Crudo #F2EBE0
+   (nombres oni-red/oni-gold conservados; oni-red mapea a Oni Morado, oni-gold a Inca Gold) */
 @theme {
-  --color-oni-black: #0d0d0d;
-  --color-oni-ink: #181818;
-  --color-oni-surface: #232323;
-  --color-oni-line: #333336;
-  --color-oni-red: #c81010;
-  --color-oni-red-dark: #9c0c0c;
-  --color-oni-red-soft: #e63b3b;
-  --color-oni-stone: #e5e5e5;
-  --color-oni-gold: #e5e5e5;
-  --color-oni-bone: #f4f4f4;
-  --color-oni-ash: #9a9a9a;
+  --color-oni-black: #12101e;   /* Yoru — fondo base */
+  --color-oni-ink: #1e1a30;     /* Kage — cards */
+  --color-oni-surface: #2a2440; /* capa secundaria */
+  --color-oni-line: #3a3352;    /* separadores (tinte morado) */
+  --color-oni-red: #7b5ea7;     /* Oni Morado — acento primario */
+  --color-oni-red-dark: #5f4783;/* morado oscuro (hover) */
+  --color-oni-red-soft: #9b7fc4;/* morado claro */
+  --color-oni-stone: #f2ebe0;   /* Washi */
+  --color-oni-gold: #c4a84a;    /* Inca Gold — dorado real */
+  --color-oni-bone: #f2ebe0;    /* Washi */
+  --color-oni-ash: #a79fb5;     /* muted morado-gris */
 
-  --font-display: var(--font-oxanium), "Arial Narrow", sans-serif;
-  --font-sans: var(--font-montserrat), system-ui, sans-serif;
+  --font-display: var(--font-bebas), "Arial Narrow", sans-serif;
+  --font-sans: var(--font-dm-sans), system-ui, sans-serif;
   --font-jp: var(--font-noto-jp), serif;
 
   --radius-oni: 0.5rem;
