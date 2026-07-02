@@ -61,7 +61,7 @@ export function HeroSlider({ slides }: { slides: Slide[] }) {
           const showText = s.showText ?? true;
           return (
             <div key={s.id} className="relative min-w-full" aria-hidden={idx !== i}>
-              <div className="relative aspect-[16/10] w-full sm:aspect-[16/8] lg:aspect-[16/7]">
+              <div className="relative aspect-[16/9] max-h-[560px] w-full sm:aspect-[16/7] lg:aspect-[16/6]">
                 <Image
                   src={s.imageUrl}
                   alt={s.title}
