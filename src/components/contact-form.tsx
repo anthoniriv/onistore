@@ -31,7 +31,7 @@ export function ContactForm() {
   if (state === "done") {
     return (
       <div className="flex flex-col items-center gap-2 py-8 text-center">
-        <CheckCircle2 className="h-12 w-12 text-emerald-500" />
+        <CheckCircle2 className="h-12 w-12 text-oni-success" />
         <p className="font-display text-xl">¡Mensaje enviado!</p>
         <p className="text-sm text-oni-ash">Te responderemos pronto por WhatsApp o correo.</p>
       </div>

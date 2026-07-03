@@ -16,20 +16,28 @@ const SORTS = [
   { v: "nombre", l: "Nombre A–Z" },
 ];
 
+const AVAILABILITY = [
+  { v: "instock", l: "En stock" },
+  { v: "preorder", l: "Preventa" },
+];
+
 export function CatalogFilters({
   categories,
   tags,
   genres = [],
+  brands = [],
   hideChancaditos,
 }: {
   categories: Cat[];
   tags: Tag[];
   genres?: Genre[];
+  brands?: string[];
   hideChancaditos?: boolean;
 }) {
   const router = useRouter();
   const sp = useSearchParams();
   const [open, setOpen] = useState(false);
+  const [tagQuery, setTagQuery] = useState("");
 
   const current = useMemo(
     () => ({
@@ -37,6 +45,9 @@ export function CatalogFilters({
       condition: sp.get("condition") ?? "",
       tag: sp.get("tag") ?? "",
       genre: sp.get("genre") ?? "",
+      brand: sp.get("brand") ?? "",
+      oferta: sp.get("oferta") === "1",
+      availability: sp.get("availability") ?? "",
       min: sp.get("min") ?? "",
       max: sp.get("max") ?? "",
       chancaditos: sp.get("chancaditos") === "1",
@@ -44,6 +55,11 @@ export function CatalogFilters({
     }),
     [sp]
   );
+
+  const shownTags = useMemo(() => {
+    const q = tagQuery.trim().toLowerCase();
+    return q ? tags.filter((t) => t.name.toLowerCase().includes(q)) : tags;
+  }, [tags, tagQuery]);
 
   function update(patch: Record<string, string | null>) {
     const params = new URLSearchParams(sp.toString());
@@ -68,6 +84,9 @@ export function CatalogFilters({
     (current.condition ? 1 : 0) +
     (current.tag ? 1 : 0) +
     (current.genre ? 1 : 0) +
+    (current.brand ? 1 : 0) +
+    (current.oferta ? 1 : 0) +
+    (current.availability ? 1 : 0) +
     (current.min ? 1 : 0) +
     (current.max ? 1 : 0) +
     (current.chancaditos ? 1 : 0);
@@ -111,6 +130,38 @@ export function CatalogFilters({
         </div>
       </div>
 
+      {/* Disponibilidad */}
+      <div>
+        <h3 className="mb-2 font-display text-sm tracking-wide text-oni-bone">Disponibilidad</h3>
+        <div className="flex flex-wrap gap-2">
+          {AVAILABILITY.map((a) => (
+            <button
+              key={a.v}
+              onClick={() => update({ availability: current.availability === a.v ? null : a.v })}
+              className={cn(
+                "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
+                current.availability === a.v
+                  ? "border-oni-red bg-oni-red text-white"
+                  : "border-oni-line bg-oni-ink text-oni-bone hover:border-oni-red"
+              )}
+            >
+              {a.l}
+            </button>
+          ))}
+          <button
+            onClick={() => update({ oferta: current.oferta ? null : "1" })}
+            className={cn(
+              "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
+              current.oferta
+                ? "border-oni-red bg-oni-red text-white"
+                : "border-oni-line bg-oni-ink text-oni-bone hover:border-oni-red"
+            )}
+          >
+            En oferta
+          </button>
+        </div>
+      </div>
+
       {/* Precio */}
       <div>
         <h3 className="mb-2 font-display text-sm tracking-wide text-oni-bone">Precio (S/)</h3>
@@ -139,8 +190,16 @@ export function CatalogFilters({
       {tags.length > 0 && (
         <div>
           <h3 className="mb-2 font-display text-sm tracking-wide text-oni-bone">Anime</h3>
-          <div className="flex flex-wrap gap-2">
-            {tags.map((t) => (
+          {tags.length > 12 && (
+            <input
+              value={tagQuery}
+              onChange={(e) => setTagQuery(e.target.value)}
+              placeholder="Buscar anime…"
+              className="mb-2 h-9 w-full rounded-md border border-oni-line bg-oni-ink px-3 text-xs outline-none focus:border-oni-gold"
+            />
+          )}
+          <div className="flex max-h-48 flex-wrap gap-2 overflow-y-auto">
+            {shownTags.map((t) => (
               <button
                 key={t.slug}
                 onClick={() => update({ tag: current.tag === t.slug ? null : t.slug })}
@@ -154,7 +213,25 @@ export function CatalogFilters({
                 {t.name}
               </button>
             ))}
+            {shownTags.length === 0 && <p className="text-xs text-oni-ash">Sin coincidencias.</p>}
           </div>
+        </div>
+      )}
+
+      {/* Marca / Fabricante */}
+      {brands.length > 0 && (
+        <div>
+          <h3 className="mb-2 font-display text-sm tracking-wide text-oni-bone">Marca</h3>
+          <select
+            value={current.brand}
+            onChange={(e) => update({ brand: e.target.value || null })}
+            className="h-10 w-full rounded-md border border-oni-line bg-oni-ink px-3 text-sm outline-none focus:border-oni-red"
+          >
+            <option value="">Todas las marcas</option>
+            {brands.map((b) => (
+              <option key={b} value={b} className="bg-oni-ink">{b}</option>
+            ))}
+          </select>
         </div>
       )}
 

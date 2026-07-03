@@ -45,19 +45,19 @@ export default async function HomePage() {
 
       {featured.length > 0 && (
         <section className="mt-8">
-          <SectionHeader kicker="Lo más pedido" title="Destacados" href="/catalogo" />
+          <SectionHeader title="Destacados" href="/catalogo" />
           <ProductRail products={featured} />
         </section>
       )}
 
       {latest.length > 0 && (
         <section className="mt-8">
-          <SectionHeader kicker="Recién llegados" title="Últimos agregados" href="/catalogo?sort=nuevo" />
+          <SectionHeader title="Últimos agregados" href="/catalogo?sort=nuevo" />
           <ProductRail products={latest} />
         </section>
       )}
 
-      <section className="mt-8 overflow-hidden rounded-oni border border-oni-red/40 bg-gradient-to-r from-oni-red/20 to-oni-ink p-5 sm:p-8">
+      <section className="mt-8 overflow-hidden rounded-oni border border-oni-red/40 bg-oni-red/10 p-5 sm:p-8">
         <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <Flame className="h-9 w-9 text-oni-red" />

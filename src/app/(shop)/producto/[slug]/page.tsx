@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title,
     description,
     alternates: { canonical: `/producto/${slug}` },
-    openGraph: { title, description, url: productUrl(slug), type: "website", images: [{ url: image }] },
+    openGraph: { title, description, url: productUrl(slug), type: "website", images: [{ url: image, alt: p.name }] },
   };
 }
 
@@ -122,13 +122,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           {/* Estado de stock */}
           <p className="mt-2 text-sm font-semibold">
             {state.isPreorder ? (
-              <span className="text-oni-red">🗓️ Disponible en preventa</span>
+              <span className="text-oni-red-soft">🗓️ Disponible en preventa</span>
             ) : state.soldOut ? (
               <span className="text-oni-ash">Agotado por ahora</span>
             ) : state.lowStock ? (
-              <span className="text-oni-red">¡Últimas {p.stock} unidades!</span>
+              <span className="text-oni-red-soft">¡Últimas {p.stock} unidades!</span>
             ) : (
-              <span className="text-emerald-400">En stock</span>
+              <span className="text-oni-success">En stock</span>
             )}
           </p>
 

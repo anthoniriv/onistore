@@ -16,6 +16,7 @@
   --color-oni-gold: #c4a84a;    /* Inca Gold — dorado real */
   --color-oni-bone: #f2ebe0;    /* Washi */
   --color-oni-ash: #a79fb5;     /* muted morado-gris */
+  --color-oni-success: #3ecf8e; /* verde éxito de sistema (descuento, confirmación) */
 
   --font-display: var(--font-bebas), "Arial Narrow", sans-serif;
   --font-sans: var(--font-dm-sans), system-ui, sans-serif;
@@ -85,4 +86,39 @@ body {
 }
 .animate-fade {
   animation: oni-fade 0.5s ease both;
+}
+
+@keyframes oni-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.animate-cart-pop {
+  animation: oni-pop 0.3s ease-out;
+}
+
+/* Accesibilidad: respeta prefers-reduced-motion en todo el sitio.
+   El marquee se detiene, los fades aparecen sin desplazamiento y las
+   transiciones se vuelven casi instantáneas (incluye el slider del hero). */
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+  .animate-fade {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -1,7 +1,9 @@
+import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import { prisma } from "./prisma";
 import type { Prisma } from "@prisma/client";
 
+export type Availability = "instock" | "preorder";
 export type CatalogParams = {
   category?: string; // slug
   condition?: string; // NUEVO|...
@@ -10,6 +12,9 @@ export type CatalogParams = {
   max?: number;
   tag?: string;
   genre?: string;
+  brand?: string;
+  oferta?: boolean; // solo con descuento
+  availability?: Availability;
   chancaditos?: boolean;
   sort?: "nuevo" | "precio-asc" | "precio-desc" | "nombre";
   page?: number;
@@ -27,9 +32,18 @@ export async function getCatalog(params: CatalogParams) {
   const where: Prisma.ProductWhereInput = { active: true };
   if (params.category) where.category = { slug: params.category };
   if (params.condition) where.condition = params.condition;
-  if (params.chancaditos) where.isChancadito = true;
+  // Chancaditos = outlet (con detalle) + seminuevos (ya abiertos).
+  if (params.chancaditos) where.OR = [{ isChancadito: true }, { condition: "SEMINUEVO" }];
   if (params.tag) where.tags = { some: { tag: { slug: params.tag } } };
   if (params.genre) where.genres = { some: { genre: { slug: params.genre } } };
+  if (params.brand) where.brand = params.brand;
+  if (params.oferta) where.discountCents = { not: null };
+  if (params.availability === "instock") {
+    where.stock = { gt: 0 };
+    if (!params.condition) where.condition = { not: "PREORDER" };
+  } else if (params.availability === "preorder") {
+    where.condition = "PREORDER";
+  }
   if (params.q) {
     const tokens = params.q.trim().split(/\s+/).filter(Boolean);
     if (tokens.length)
@@ -74,7 +88,9 @@ export async function getCatalog(params: CatalogParams) {
   return { items, total, page, perPage, pages: Math.ceil(total / perPage) };
 }
 
-export async function getProductBySlug(slug: string) {
+// Cacheado por request (React cache): la página de producto y su generateMetadata
+// lo llaman por separado; así solo se golpea la DB una vez por render.
+export const getProductBySlug = cache(async (slug: string) => {
   return prisma.product.findUnique({
     relationLoadStrategy: "join",
     where: { slug },
@@ -85,7 +101,7 @@ export async function getProductBySlug(slug: string) {
       genres: { include: { genre: true } },
     },
   });
-}
+});
 
 export async function getRelated(categoryId: string, excludeId: string, take = 6) {
   return prisma.product.findMany({
@@ -117,13 +133,45 @@ export const getGenres = unstable_cache(
   { tags: ["genres"], revalidate: 3600 },
 );
 
+// Marcas/fabricantes presentes en el catálogo (distinct), para el filtro.
+export const getBrands = unstable_cache(
+  async () => {
+    const rows = await prisma.product.findMany({
+      where: { active: true, brand: { not: null } },
+      select: { brand: true },
+      distinct: ["brand"],
+      orderBy: { brand: "asc" },
+    });
+    return rows.map((r) => r.brand!).filter(Boolean);
+  },
+  ["brands"],
+  { tags: ["brands"], revalidate: 3600 },
+);
+
 export async function getFeatured(take = 8) {
-  return prisma.product.findMany({
+  const featured = await prisma.product.findMany({
     relationLoadStrategy: "join",
     where: { active: true, featured: true },
     include: { images: { take: 1, orderBy: { order: "asc" } }, category: true },
     take,
   });
+  if (featured.length >= take) return featured;
+
+  // Lanzamiento: aún no hay (suficientes) productos marcados como destacados,
+  // así que rellenamos el rail con productos aleatorios. Cuando el admin marque
+  // destacados reales, esos toman prioridad y el relleno desaparece solo.
+  const need = take - featured.length;
+  const pool = await prisma.product.findMany({
+    relationLoadStrategy: "join",
+    where: { active: true, featured: false, id: { notIn: featured.map((p) => p.id) } },
+    include: { images: { take: 1, orderBy: { order: "asc" } }, category: true },
+    take: 100,
+  });
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return [...featured, ...pool.slice(0, need)];
 }
 
 export async function getLatest(take = 10) {
@@ -137,9 +185,10 @@ export async function getLatest(take = 10) {
 }
 
 export async function getChancaditos(take = 8) {
+  // Zona Chancaditos: outlet (items con detalle) + seminuevos (ya abiertos).
   return prisma.product.findMany({
     relationLoadStrategy: "join",
-    where: { active: true, isChancadito: true },
+    where: { active: true, OR: [{ isChancadito: true }, { condition: "SEMINUEVO" }] },
     include: { images: { take: 1, orderBy: { order: "asc" } }, category: true },
     take,
   });

@@ -56,7 +56,7 @@ export function CouponInput() {
           </button>
         </div>
         {active ? (
-          <p className="mt-1 text-xs text-emerald-400">Descuento aplicado: −{formatPrice(discount)}</p>
+          <p className="mt-1 text-xs text-oni-success">Descuento aplicado: −{formatPrice(discount)}</p>
         ) : (
           <p className="mt-1 text-xs text-oni-ash">No aplica aún (compra mínima {formatPrice(coupon.minSubtotalCents)}).</p>
         )}

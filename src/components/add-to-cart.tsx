@@ -34,7 +34,7 @@ export function AddToCart({ product, variant = "icon", className }: Props) {
         disabled={soldOut}
         aria-label="Agregar al carrito"
         className={cn(
-          "grid h-9 w-9 place-items-center rounded-md bg-oni-red text-white transition-colors hover:bg-oni-red-dark disabled:bg-oni-line disabled:text-oni-ash",
+          "grid h-11 w-11 place-items-center rounded-md bg-oni-red text-white transition-colors hover:bg-oni-red-dark disabled:bg-oni-line disabled:text-oni-ash",
           className
         )}
       >

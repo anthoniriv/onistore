@@ -1,12 +1,13 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getCatalog, getCategories, getTags, getGenres, type CatalogParams } from "@/lib/queries";
+import { getCatalog, getCategories, getTags, getGenres, getBrands, type CatalogParams } from "@/lib/queries";
 import { prisma } from "@/lib/prisma";
 import { SITE_NAME } from "@/lib/site";
 import { CatalogFilters } from "@/components/catalog-filters";
+import { ActiveFilters } from "@/components/active-filters";
 import { ProductGrid } from "@/components/ui";
-import { PackageX } from "lucide-react";
+import { PackageX, ChevronLeft, ChevronRight } from "lucide-react";
 
 type SP = { [k: string]: string | string[] | undefined };
 
@@ -41,6 +42,9 @@ function parse(sp: SP): CatalogParams {
     q: s("q"),
     tag: s("tag"),
     genre: s("genre"),
+    brand: s("brand"),
+    oferta: s("oferta") === "1",
+    availability: s("availability") as CatalogParams["availability"],
     min: n("min"),
     max: n("max"),
     chancaditos: s("chancaditos") === "1",
@@ -53,11 +57,12 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
   const sp = await searchParams;
   const params = parse(sp);
 
-  const [{ items, total, page, pages }, categories, tags, genres] = await Promise.all([
+  const [{ items, total, page, pages }, categories, tags, genres, brands] = await Promise.all([
     getCatalog(params),
     getCategories(),
     getTags(),
     getGenres(),
+    getBrands(),
   ]);
 
   const activeCat = categories.find((c) => c.slug === params.category);
@@ -77,10 +82,13 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
 
       <div className="mt-5 grid grid-cols-1 gap-6 md:grid-cols-[240px_1fr]">
         <Suspense fallback={<div className="h-10" />}>
-          <CatalogFilters categories={categories} tags={tags} genres={genres} />
+          <CatalogFilters categories={categories} tags={tags} genres={genres} brands={brands} />
         </Suspense>
 
         <div>
+          <Suspense fallback={null}>
+            <ActiveFilters categories={categories} tags={tags} genres={genres} brands={brands} />
+          </Suspense>
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center gap-3 rounded-oni border border-oni-line bg-oni-ink py-20 text-center">
               <PackageX className="h-12 w-12 text-oni-line" />
@@ -92,29 +100,81 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
           )}
 
           {pages > 1 && (
-            <div className="mt-8 flex items-center justify-center gap-2">
-              {Array.from({ length: pages }).map((_, idx) => {
-                const p = idx + 1;
-                const params2 = new URLSearchParams(
-                  Object.entries(sp).flatMap(([k, v]) => (typeof v === "string" ? [[k, v]] : []))
-                );
-                params2.set("page", String(p));
-                return (
-                  <Link
-                    key={p}
-                    href={`/catalogo?${params2.toString()}`}
-                    className={`grid h-10 min-w-10 place-items-center rounded-md border px-3 text-sm ${
-                      p === page ? "border-oni-red bg-oni-red text-white" : "border-oni-line text-oni-bone hover:border-oni-red"
-                    }`}
-                  >
-                    {p}
-                  </Link>
-                );
-              })}
-            </div>
+            <Pagination sp={sp} page={page} pages={pages} />
           )}
         </div>
       </div>
     </div>
+  );
+}
+
+/** Ventana de páginas: 1 … alrededor-del-actual … última. Evita el muro de números. */
+function pageWindow(current: number, total: number): (number | "gap")[] {
+  const set = new Set<number>([1, total, current, current - 1, current + 1]);
+  const sorted = [...set].filter((p) => p >= 1 && p <= total).sort((a, b) => a - b);
+  const out: (number | "gap")[] = [];
+  let prev = 0;
+  for (const p of sorted) {
+    if (p - prev > 1) out.push("gap");
+    out.push(p);
+    prev = p;
+  }
+  return out;
+}
+
+function Pagination({ sp, page, pages }: { sp: SP; page: number; pages: number }) {
+  const hrefFor = (p: number) => {
+    const params = new URLSearchParams(
+      Object.entries(sp).flatMap(([k, v]) => (typeof v === "string" ? [[k, v]] : []))
+    );
+    if (p === 1) params.delete("page");
+    else params.set("page", String(p));
+    const qs = params.toString();
+    return qs ? `/catalogo?${qs}` : "/catalogo";
+  };
+
+  const cell = "grid h-11 min-w-11 place-items-center rounded-md border px-3 text-sm transition-colors";
+  const items = pageWindow(page, pages);
+
+  return (
+    <nav aria-label="Paginación" className="mt-8 flex flex-wrap items-center justify-center gap-2">
+      {page > 1 ? (
+        <Link href={hrefFor(page - 1)} rel="prev" aria-label="Página anterior"
+          className={`${cell} border-oni-line text-oni-bone hover:border-oni-red`}>
+          <ChevronLeft className="h-4 w-4" />
+        </Link>
+      ) : (
+        <span aria-hidden className={`${cell} border-oni-line/50 text-oni-line`}>
+          <ChevronLeft className="h-4 w-4" />
+        </span>
+      )}
+
+      {items.map((it, idx) =>
+        it === "gap" ? (
+          <span key={`gap-${idx}`} aria-hidden className="px-1 text-oni-ash">…</span>
+        ) : it === page ? (
+          <span key={it} aria-current="page"
+            className={`${cell} border-oni-red bg-oni-red font-semibold text-white`}>
+            {it}
+          </span>
+        ) : (
+          <Link key={it} href={hrefFor(it)} aria-label={`Página ${it}`}
+            className={`${cell} border-oni-line text-oni-bone hover:border-oni-red`}>
+            {it}
+          </Link>
+        )
+      )}
+
+      {page < pages ? (
+        <Link href={hrefFor(page + 1)} rel="next" aria-label="Página siguiente"
+          className={`${cell} border-oni-line text-oni-bone hover:border-oni-red`}>
+          <ChevronRight className="h-4 w-4" />
+        </Link>
+      ) : (
+        <span aria-hidden className={`${cell} border-oni-line/50 text-oni-line`}>
+          <ChevronRight className="h-4 w-4" />
+        </span>
+      )}
+    </nav>
   );
 }

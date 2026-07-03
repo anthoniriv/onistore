@@ -18,7 +18,7 @@ export function SectionHeader({
         <h2 className="font-display text-2xl leading-none text-oni-bone sm:text-3xl">{title}</h2>
       </div>
       {href && (
-        <Link href={href} className="flex shrink-0 items-center gap-0.5 text-sm font-medium text-oni-red hover:text-oni-red-soft">
+        <Link href={href} className="flex shrink-0 items-center gap-0.5 text-sm font-medium text-oni-red-soft hover:text-oni-bone">
           Ver todo <ChevronRight className="h-4 w-4" />
         </Link>
       )}

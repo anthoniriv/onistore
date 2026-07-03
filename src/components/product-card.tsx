@@ -64,15 +64,15 @@ export function ProductCard({ product }: { product: CardProduct }) {
 
       <div className="flex flex-1 flex-col p-3">
         <p className="line-clamp-1 text-[11px] uppercase tracking-wide text-oni-ash">{kicker}</p>
-        <Link href={`/producto/${product.slug}`} className="line-clamp-2 text-sm font-medium text-oni-bone hover:text-oni-red">
+        <Link href={`/producto/${product.slug}`} className="line-clamp-2 text-sm font-medium text-oni-bone hover:text-oni-red-soft">
           {product.name}
         </Link>
 
         {/* Stock / urgencia */}
         {state.isPreorder ? (
-          <p className="mt-1 text-[11px] font-semibold text-oni-red">🗓️ En preventa</p>
+          <p className="mt-1 text-[11px] font-semibold text-oni-red-soft">🗓️ En preventa</p>
         ) : state.lowStock ? (
-          <p className="mt-1 text-[11px] font-semibold text-oni-red">¡Últimas {product.stock} unidades!</p>
+          <p className="mt-1 text-[11px] font-semibold text-oni-red-soft">¡Últimas {product.stock} unidades!</p>
         ) : state.soldOut ? (
           <p className="mt-1 text-[11px] text-oni-ash">Sin stock</p>
         ) : (
@@ -100,7 +100,7 @@ export function ProductCard({ product }: { product: CardProduct }) {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Reservar en preventa por WhatsApp"
-              className="grid h-9 w-9 place-items-center rounded-md bg-[#25D366] text-white transition-transform hover:scale-105"
+              className="grid h-11 w-11 place-items-center rounded-md bg-[#25D366] text-white transition-transform hover:scale-105"
             >
               <WhatsAppIcon className="h-4 w-4" />
             </a>
@@ -111,7 +111,7 @@ export function ProductCard({ product }: { product: CardProduct }) {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Avísame cuando llegue (WhatsApp)"
-              className="grid h-9 w-9 place-items-center rounded-md border border-oni-line text-oni-bone transition-colors hover:border-oni-red hover:text-oni-red"
+              className="grid h-11 w-11 place-items-center rounded-md border border-oni-line text-oni-bone transition-colors hover:border-oni-red hover:text-oni-red"
             >
               <Bell className="h-4 w-4" />
             </a>

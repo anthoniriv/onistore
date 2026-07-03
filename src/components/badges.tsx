@@ -5,7 +5,7 @@ import type { BadgeDescriptor, BadgeKind } from "@/lib/card-state";
 const BADGE_STYLE: Record<BadgeKind, string> = {
   oferta: "bg-oni-red text-white",
   chancadito: "bg-oni-stone text-oni-black",
-  preventa: "border border-oni-red text-oni-red bg-oni-black/50 backdrop-blur-sm",
+  preventa: "border border-oni-red-soft text-oni-red-soft bg-oni-black/50 backdrop-blur-sm",
   nuevo: "border border-oni-stone/60 text-oni-stone bg-oni-black/50 backdrop-blur-sm",
   condicion: "border border-oni-ash text-oni-ash bg-oni-black/50 backdrop-blur-sm",
 };
@@ -39,7 +39,7 @@ export function BadgeRow({ badges, className }: { badges: BadgeDescriptor[]; cla
 
 const COND_STYLE: Record<string, string> = {
   NUEVO: "border border-oni-stone/60 text-oni-stone",
-  SEMINUEVO: "border border-oni-red text-oni-red",
+  SEMINUEVO: "border border-oni-red-soft text-oni-red-soft",
   USADO: "border border-oni-ash text-oni-ash",
   PREORDER: "bg-oni-red text-white",
 };

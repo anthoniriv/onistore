@@ -1,8 +1,9 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Flame } from "lucide-react";
-import { getCatalog, getCategories, getTags, getGenres, type CatalogParams } from "@/lib/queries";
+import { getCatalog, getCategories, getTags, getGenres, getBrands, type CatalogParams } from "@/lib/queries";
 import { CatalogFilters } from "@/components/catalog-filters";
+import { ActiveFilters } from "@/components/active-filters";
 import { ProductGrid } from "@/components/ui";
 
 export const metadata: Metadata = {
@@ -23,6 +24,9 @@ export default async function ChancaditosPage({ searchParams }: { searchParams: 
     condition: s("condition"),
     tag: s("tag"),
     genre: s("genre"),
+    brand: s("brand"),
+    oferta: s("oferta") === "1",
+    availability: s("availability") as CatalogParams["availability"],
     min: n("min"),
     max: n("max"),
     sort: (s("sort") as CatalogParams["sort"]) ?? "nuevo",
@@ -30,11 +34,12 @@ export default async function ChancaditosPage({ searchParams }: { searchParams: 
     perPage: 24,
   };
 
-  const [{ items, total }, categories, tags, genres] = await Promise.all([
+  const [{ items, total }, categories, tags, genres, brands] = await Promise.all([
     getCatalog(params),
     getCategories(),
     getTags(),
     getGenres(),
+    getBrands(),
   ]);
 
   return (
@@ -48,8 +53,8 @@ export default async function ChancaditosPage({ searchParams }: { searchParams: 
           </div>
         </div>
         <p className="mt-3 max-w-xl text-sm text-oni-ash sm:text-base">
-          Productos con pequeños detalles (caja golpeada, blister abierto, leve desgaste) a precios de demonio. La esencia
-          está intacta — solo el precio cambió. 🔥
+          Outlet con pequeños detalles (caja golpeada, blister abierto, leve desgaste) y seminuevos ya abiertos, a precios
+          de demonio. La esencia está intacta — solo el precio cambió. 🔥
         </p>
       </div>
 
@@ -57,9 +62,12 @@ export default async function ChancaditosPage({ searchParams }: { searchParams: 
 
       <div className="mt-3 grid grid-cols-1 gap-6 md:grid-cols-[240px_1fr]">
         <Suspense fallback={<div className="h-10" />}>
-          <CatalogFilters categories={categories} tags={tags} genres={genres} hideChancaditos />
+          <CatalogFilters categories={categories} tags={tags} genres={genres} brands={brands} hideChancaditos />
         </Suspense>
         <div>
+          <Suspense fallback={null}>
+            <ActiveFilters categories={categories} tags={tags} genres={genres} brands={brands} hideChancaditos />
+          </Suspense>
           {items.length === 0 ? (
             <div className="rounded-oni border border-oni-line bg-oni-ink py-20 text-center text-oni-ash">
               Por ahora no hay chancaditos. ¡Vuelve pronto! 👹

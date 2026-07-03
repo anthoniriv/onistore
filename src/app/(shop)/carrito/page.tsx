@@ -54,20 +54,20 @@ export default function CarritoPage() {
                     <Image src={it.image ?? "/placeholders/p1.svg"} alt={it.name} fill unoptimized={(it.image ?? "").endsWith(".svg")} sizes="64px" className="object-contain p-1" />
                   </Link>
                   <div className="min-w-0">
-                    <Link href={`/producto/${it.slug}`} className="line-clamp-2 text-sm font-medium text-oni-bone hover:text-oni-red">{it.name}</Link>
-                    <p className="mt-0.5 text-sm font-semibold text-oni-red">{formatPrice(it.priceCents)}</p>
+                    <Link href={`/producto/${it.slug}`} className="line-clamp-2 text-sm font-medium text-oni-bone hover:text-oni-red-soft">{it.name}</Link>
+                    <p className="mt-0.5 text-sm font-semibold text-oni-red-soft">{formatPrice(it.priceCents)}</p>
                     <button onClick={() => remove(it.id)} className="mt-1 flex items-center gap-1 text-xs text-oni-ash hover:text-oni-red sm:hidden">
                       <Trash2 className="h-3.5 w-3.5" /> Quitar
                     </button>
                   </div>
                 </div>
 
-                <div className="flex items-center rounded-md border border-oni-line sm:mx-auto sm:w-28 sm:justify-center">
-                  <button onClick={() => setQty(it.id, it.qty - 1)} aria-label="Menos" className="grid h-9 w-9 place-items-center text-oni-bone">
+                <div className="flex items-center rounded-md border border-oni-line sm:mx-auto sm:w-32 sm:justify-center">
+                  <button onClick={() => setQty(it.id, it.qty - 1)} aria-label="Menos" className="grid h-11 w-11 place-items-center text-oni-bone">
                     <Minus className="h-4 w-4" />
                   </button>
                   <span className="w-8 text-center text-sm">{it.qty}</span>
-                  <button onClick={() => setQty(it.id, it.qty + 1)} aria-label="Más" className="grid h-9 w-9 place-items-center text-oni-bone">
+                  <button onClick={() => setQty(it.id, it.qty + 1)} aria-label="Más" className="grid h-11 w-11 place-items-center text-oni-bone">
                     <Plus className="h-4 w-4" />
                   </button>
                 </div>
@@ -103,7 +103,7 @@ export default function CarritoPage() {
           {discount > 0 && (
             <div className="mt-2 flex justify-between text-sm">
               <span className="text-oni-ash">Descuento</span>
-              <span className="font-semibold text-emerald-400">−{formatPrice(discount)}</span>
+              <span className="font-semibold text-oni-success">−{formatPrice(discount)}</span>
             </div>
           )}
           <div className="mt-2 flex justify-between text-sm">

@@ -13,11 +13,14 @@ export function CartButton({ className }: { className?: string }) {
     <button
       onClick={open}
       aria-label="Abrir carrito"
-      className={`relative grid h-10 w-10 place-items-center rounded-md text-oni-bone hover:text-oni-red transition-colors ${className ?? ""}`}
+      className={`relative grid h-11 w-11 place-items-center rounded-md text-oni-bone hover:text-oni-red transition-colors ${className ?? ""}`}
     >
       <ShoppingCart className="h-5 w-5" />
       {mounted && count > 0 && (
-        <span className="absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-oni-red px-1 text-[11px] font-bold text-white">
+        <span
+          key={count}
+          className="animate-cart-pop absolute right-1 top-1 grid h-5 min-w-5 place-items-center rounded-full bg-oni-red px-1 text-[11px] font-bold text-white"
+        >
           {count}
         </span>
       )}
