@@ -2,10 +2,10 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Upload, X, Save, Copy, Sparkles } from "lucide-react";
+import { Loader2, Upload, X, Save, Copy, Sparkles, Plus } from "lucide-react";
 import { CONDITIONS, CONDITION_LABEL } from "@/lib/utils";
 import { BRANDS } from "@/lib/brands";
-import { saveProduct } from "@/app/admin/actions";
+import { saveProduct, createTag } from "@/app/admin/actions";
 
 type Category = { id: string; name: string };
 type Initial = {
@@ -30,9 +30,11 @@ type Initial = {
   active: boolean;
   images: { url: string }[];
   genres?: { genreId: string }[];
+  tags?: { tagId: string }[];
 };
 
 type Genre = { id: string; name: string; kind: string };
+type Tag = { id: string; name: string };
 
 type Suggestion = {
   id: string;
@@ -52,7 +54,7 @@ type Suggestion = {
   genreIds: string[];
 };
 
-export function ProductForm({ categories, genres = [], initial }: { categories: Category[]; genres?: Genre[]; initial?: Initial }) {
+export function ProductForm({ categories, genres = [], tags = [], initial }: { categories: Category[]; genres?: Genre[]; tags?: Tag[]; initial?: Initial }) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -61,6 +63,36 @@ export function ProductForm({ categories, genres = [], initial }: { categories: 
   const [genreIds, setGenreIds] = useState<string[]>(initial?.genres?.map((g) => g.genreId) ?? []);
   const toggleGenre = (id: string) =>
     setGenreIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+
+  // Tags (anime) — asignables desde el form, con creación al vuelo.
+  const [allTags, setAllTags] = useState<Tag[]>(tags);
+  const [tagIds, setTagIds] = useState<string[]>(initial?.tags?.map((t) => t.tagId) ?? []);
+  const [newTag, setNewTag] = useState("");
+  const [addingTag, setAddingTag] = useState(false);
+  const toggleTag = (id: string) =>
+    setTagIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+
+  async function addTag() {
+    const name = newTag.trim();
+    if (name.length < 2 || addingTag) return;
+    const existing = allTags.find((t) => t.name.toLowerCase() === name.toLowerCase());
+    if (existing) {
+      if (!tagIds.includes(existing.id)) toggleTag(existing.id);
+      setNewTag("");
+      return;
+    }
+    setAddingTag(true);
+    try {
+      const tag = await createTag(name);
+      setAllTags((prev) => [...prev, tag].sort((a, b) => a.name.localeCompare(b.name)));
+      setTagIds((prev) => [...prev, tag.id]);
+      setNewTag("");
+    } catch {
+      setError("No se pudo crear el tag.");
+    } finally {
+      setAddingTag(false);
+    }
+  }
 
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [showSuggest, setShowSuggest] = useState(true);
@@ -179,6 +211,7 @@ export function ProductForm({ categories, genres = [], initial }: { categories: 
         active: f.active,
         images,
         genreIds,
+        tagIds,
       });
       router.push("/admin/productos");
       router.refresh();
@@ -314,6 +347,44 @@ export function ProductForm({ categories, genres = [], initial }: { categories: 
             })}
           </Box>
         )}
+
+        <Box title="Tags / Anime">
+          <p className="text-xs text-oni-ash">Alimentan el filtro “Anime” del catálogo. Toca para asignar; crea nuevos abajo.</p>
+          {allTags.length > 0 && (
+            <div className="flex max-h-40 flex-wrap gap-2 overflow-y-auto">
+              {allTags.map((t) => {
+                const on = tagIds.includes(t.id);
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => toggleTag(t.id)}
+                    className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${on ? "border-oni-gold bg-oni-gold text-oni-black" : "border-oni-line bg-oni-surface text-oni-bone hover:border-oni-gold"}`}
+                  >
+                    {t.name}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+          <div className="flex gap-2">
+            <input
+              value={newTag}
+              onChange={(e) => setNewTag(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addTag(); } }}
+              placeholder="Nuevo tag (ej. Jujutsu Kaisen)"
+              className={inp}
+            />
+            <button
+              type="button"
+              onClick={addTag}
+              disabled={addingTag || newTag.trim().length < 2}
+              className="flex h-10 shrink-0 items-center gap-1 rounded-md bg-oni-red px-3 text-sm font-semibold text-white hover:bg-oni-red-dark disabled:opacity-50"
+            >
+              {addingTag ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />} Añadir
+            </button>
+          </div>
+        </Box>
 
         <Box title="SEO (opcional)">
           <L label="Título SEO"><input value={f.seoTitle} onChange={(e) => set("seoTitle", e.target.value)} placeholder="Si vacío, se usa el nombre del producto" className={inp} /></L>

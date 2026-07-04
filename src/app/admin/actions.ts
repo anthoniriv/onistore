@@ -56,7 +56,24 @@ type ProductInput = {
   active: boolean;
   images: string[]; // urls
   genreIds: string[];
+  tagIds: string[];
 };
+
+/** Crea (o reutiliza) un tag por nombre y lo devuelve. Para asignar al vuelo desde el form. */
+export async function createTag(name: string) {
+  await requireAdmin();
+  const clean = name.trim();
+  if (clean.length < 2) throw new Error("Nombre de tag muy corto");
+  const slug = slugify(clean);
+  const tag = await prisma.tag.upsert({
+    where: { slug },
+    update: {},
+    create: { slug, name: clean },
+    select: { id: true, name: true },
+  });
+  revalidateTag("tags", "max");
+  return tag;
+}
 
 export async function saveProduct(input: ProductInput) {
   await requireAdmin();
@@ -93,6 +110,11 @@ export async function saveProduct(input: ProductInput) {
       await prisma.productGenre.createMany({
         data: input.genreIds.map((genreId) => ({ productId: input.id!, genreId })),
       });
+    await prisma.productTag.deleteMany({ where: { productId: input.id } });
+    if (input.tagIds.length)
+      await prisma.productTag.createMany({
+        data: input.tagIds.map((tagId) => ({ productId: input.id!, tagId })),
+      });
   } else {
     const slug = `${slugify(input.name)}-${Date.now().toString(36)}`;
     await prisma.product.create({
@@ -101,6 +123,7 @@ export async function saveProduct(input: ProductInput) {
         slug,
         images: { create: input.images.map((url, i) => ({ url, order: i })) },
         genres: { create: input.genreIds.map((genreId) => ({ genreId })) },
+        tags: { create: input.tagIds.map((tagId) => ({ tagId })) },
       },
     });
   }
