@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-03T00:00:00.000Z",
+  "title": "Design System: ONISTORE",
+  "extensions": {
+    "colorMeta": {
+      "oni-black": { "role": "neutral", "displayName": "Yoru", "canonical": "#12101e", "tonalRamp": ["#0a0912", "#12101e", "#1c1830", "#2a2440", "#3a3352", "#4d4568", "#6b6289", "#a79fb5"] },
+      "oni-ink": { "role": "neutral", "displayName": "Kage", "canonical": "#1e1a30", "tonalRamp": ["#12101e", "#1e1a30", "#2a2440", "#3a3352", "#4d4568", "#6b6289", "#8b83a3", "#a79fb5"] },
+      "oni-surface": { "role": "neutral", "displayName": "Surface", "canonical": "#2a2440", "tonalRamp": ["#12101e", "#1e1a30", "#2a2440", "#3a3352", "#4d4568", "#6b6289", "#8b83a3", "#a79fb5"] },
+      "oni-line": { "role": "neutral", "displayName": "Line", "canonical": "#3a3352", "tonalRamp": ["#1e1a30", "#2a2440", "#3a3352", "#4d4568", "#6b6289", "#8b83a3", "#a79fb5", "#c9c3d6"] },
+      "oni-red": { "role": "primary", "displayName": "Oni Morado", "canonical": "#7b5ea7", "tonalRamp": ["#2e2340", "#3f3057", "#5f4783", "#7b5ea7", "#9b7fc4", "#b7a1d6", "#d2c4e6", "#ece5f5"] },
+      "oni-red-dark": { "role": "primary", "displayName": "Oni Morado Oscuro", "canonical": "#5f4783", "tonalRamp": ["#241a33", "#382a4d", "#4c3968", "#5f4783", "#7b5ea7", "#9b7fc4", "#b7a1d6", "#d2c4e6"] },
+      "oni-red-soft": { "role": "primary", "displayName": "Oni Morado Suave", "canonical": "#9b7fc4", "tonalRamp": ["#3f3057", "#5f4783", "#7b5ea7", "#9b7fc4", "#b7a1d6", "#c9bce0", "#dcd3ec", "#efeaf7"] },
+      "oni-gold": { "role": "secondary", "displayName": "Inca Gold", "canonical": "#c4a84a", "tonalRamp": ["#3a3116", "#544527", "#7a6534", "#a08843", "#c4a84a", "#d5be6f", "#e5d59a", "#f3eccf"] },
+      "oni-bone": { "role": "neutral", "displayName": "Washi", "canonical": "#f2ebe0", "tonalRamp": ["#5a5348", "#7d7568", "#a19889", "#c2baac", "#dcd5c8", "#f2ebe0", "#f8f4ec", "#fdfbf6"] },
+      "oni-ash": { "role": "neutral", "displayName": "Ash", "canonical": "#a79fb5", "tonalRamp": ["#3a3352", "#4d4568", "#6b6289", "#8b83a3", "#a79fb5", "#c1bacd", "#d9d4e2", "#efedf3"] },
+      "whatsapp": { "role": "functional", "displayName": "WhatsApp Green", "canonical": "#25d366", "tonalRamp": ["#0c3d1e", "#12602f", "#178a44", "#1cb058", "#25d366", "#5adf8b", "#8fe9b1", "#c6f4d8"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Bebas Neue, mayúsculas. Títulos de sección, hero y CTAs de peso. Nunca texto corrido." },
+      "body": { "displayName": "Body", "purpose": "DM Sans. Texto de producto, descripciones, prosa (máx 65–75ch)." },
+      "label": { "displayName": "Label", "purpose": "DM Sans 600, tracking abierto. Categorías, metadatos, precios pequeños." },
+      "jp": { "displayName": "JP Accent", "purpose": "Noto Serif JP. Toques japoneses decorativos, no funcionales." }
+    },
+    "shadows": [
+      { "name": "inset-stroke", "value": "inset 0 0 0 1px #3a3352", "purpose": "Contorno de superficie (.oni-stroke). Única 'sombra' permitida; dibuja borde sin proyectar." },
+      { "name": "focus-ring", "value": "0 0 0 2px #7b5ea7", "purpose": "Anillo de foco morado en inputs y botones interactivos." }
+    ],
+    "motion": [
+      { "name": "marquee", "value": "translateX(0 → -50%) 22s linear infinite", "purpose": "Marquesina de anuncios en el header (.animate-marquee)." },
+      { "name": "fade-in", "value": "opacity 0→1 + translateY(8px→0), 0.5s ease", "purpose": "Entrada suave de contenido (.animate-fade)." },
+      { "name": "hover-scale", "value": "transform: scale(1.05), 0.3s", "purpose": "Micro-feedback en imágenes de card y micro-CTAs." }
+    ],
+    "breakpoints": [
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "max-content", "value": "80rem" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "CTA principal. Fondo morado sólido, hover a morado oscuro. Los de peso usan display font.",
+      "html": "<button class=\"ds-btn-primary\">AGREGAR AL CARRITO</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; height: 3rem; padding: 0 1.5rem; background: #7b5ea7; color: #f2ebe0; border: none; border-radius: 0.5rem; font-family: 'Bebas Neue', 'Arial Narrow', sans-serif; font-size: 1.125rem; letter-spacing: 0.02em; text-transform: uppercase; cursor: pointer; transition: background 0.2s, transform 0.2s; } .ds-btn-primary:hover { background: #5f4783; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px #12101e, 0 0 0 4px #7b5ea7; } .ds-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Acción secundaria. Borde morado translúcido que invierte a relleno en hover.",
+      "html": "<button class=\"ds-btn-ghost\">Ver detalle</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; height: 2.75rem; padding: 0 1rem; background: transparent; color: #7b5ea7; border: 1px solid rgba(123,94,167,0.5); border-radius: 0.5rem; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: background 0.2s, color 0.2s, border-color 0.2s; } .ds-btn-ghost:hover { background: #7b5ea7; color: #f2ebe0; border-color: #7b5ea7; } .ds-btn-ghost:focus-visible { outline: none; box-shadow: 0 0 0 2px #12101e, 0 0 0 4px #7b5ea7; }"
+    },
+    {
+      "name": "WhatsApp Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción de compra por WhatsApp. Verde de sistema, ícono inline.",
+      "html": "<button class=\"ds-btn-wa\" aria-label=\"Comprar por WhatsApp\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\" width=\"18\" height=\"18\"><path d=\"M17.5 14.4c-.3-.15-1.7-.85-2-.95-.26-.1-.46-.15-.65.15-.2.3-.75.95-.9 1.15-.17.2-.34.22-.63.07-.3-.15-1.25-.46-2.4-1.47-.9-.8-1.5-1.77-1.67-2.07-.17-.3 0-.46.13-.6.13-.14.3-.35.44-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.65-1.58-.9-2.16-.24-.57-.48-.5-.65-.5h-.56c-.2 0-.5.07-.77.36-.26.3-1 1-1 2.42 0 1.43 1.03 2.8 1.17 3 .15.2 2.05 3.13 4.96 4.4.7.3 1.24.48 1.66.62.7.22 1.33.2 1.83.12.56-.08 1.7-.7 1.94-1.36.24-.67.24-1.24.17-1.36-.07-.12-.26-.2-.56-.35zM12 2a10 10 0 00-8.6 15.1L2 22l4.9-1.4A10 10 0 1012 2z\"/></svg></button>",
+      "css": ".ds-btn-wa { display: grid; place-items: center; height: 2.25rem; width: 2.25rem; background: #25d366; color: #fff; border: none; border-radius: 0.5rem; cursor: pointer; transition: transform 0.2s; } .ds-btn-wa:hover { transform: scale(1.05); } .ds-btn-wa:focus-visible { outline: none; box-shadow: 0 0 0 2px #12101e, 0 0 0 4px #25d366; }"
+    },
+    {
+      "name": "Product Card",
+      "kind": "card",
+      "refersTo": "card-product",
+      "description": "Card de producto. Superficie Kage, imagen a contorno con aire, borde que se ilumina en hover.",
+      "html": "<a class=\"ds-card\"><span class=\"ds-card-media\"><span class=\"ds-card-img\">図</span></span><span class=\"ds-card-body\"><span class=\"ds-card-cat\">FIGURA</span><span class=\"ds-card-title\">Nezuko Kamado — Ver. Q Posket</span><span class=\"ds-card-price\">S/ 129.00</span></span></a>",
+      "css": ".ds-card { display: flex; flex-direction: column; overflow: hidden; border-radius: 0.5rem; border: 1px solid #3a3352; background: #1e1a30; color: #f2ebe0; text-decoration: none; transition: border-color 0.2s; } .ds-card:hover { border-color: rgba(123,94,167,0.6); } .ds-card-media { position: relative; display: block; aspect-ratio: 1/1; overflow: hidden; background: #2a2440; } .ds-card-img { display: grid; place-items: center; height: 100%; font-size: 3rem; color: #a79fb5; transition: transform 0.3s; } .ds-card:hover .ds-card-img { transform: scale(1.05); } .ds-card-body { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.75rem; } .ds-card-cat { font-family: 'DM Sans', sans-serif; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #a79fb5; } .ds-card-title { font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 500; line-height: 1.3; } .ds-card-price { margin-top: 0.25rem; font-size: 0.6875rem; font-weight: 600; color: #7b5ea7; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input-text",
+      "description": "Campo de texto. Fondo surface, borde de línea que vira a morado en foco.",
+      "html": "<input class=\"ds-input\" placeholder=\"Buscar figuras, manga…\" />",
+      "css": ".ds-input { height: 2.75rem; width: 100%; padding: 0 0.75rem; background: #2a2440; color: #f2ebe0; border: 1px solid #3a3352; border-radius: 0.5rem; outline: none; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.875rem; transition: border-color 0.2s; } .ds-input::placeholder { color: #a79fb5; } .ds-input:focus { border-color: #7b5ea7; box-shadow: 0 0 0 1px #7b5ea7; }"
+    },
+    {
+      "name": "Header Marquee",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Cinta de anuncios sobre el header, desplazamiento infinito.",
+      "html": "<div class=\"ds-marquee\"><div class=\"ds-marquee-track\"><span>ENVÍOS A TODO EL PERÚ</span><span>PAGA CON YAPE / PLIN</span><span>NUEVOS DROPS CADA SEMANA</span><span>ENVÍOS A TODO EL PERÚ</span><span>PAGA CON YAPE / PLIN</span><span>NUEVOS DROPS CADA SEMANA</span></div></div>",
+      "css": ".ds-marquee { overflow: hidden; background: #7b5ea7; color: #fff; } .ds-marquee-track { display: flex; width: max-content; gap: 3rem; padding: 0.375rem 0; white-space: nowrap; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.03em; animation: ds-marquee 22s linear infinite; } @keyframes ds-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } } @media (prefers-reduced-motion: reduce) { .ds-marquee-track { animation: none; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Midnight Collector's Vault",
+    "overview": "ONISTORE es una vitrina de coleccionista abierta a medianoche. El fondo Yoru (#12101e) es el terciopelo negro sobre el que descansan las piezas; morado Oni (#7b5ea7) y dorado Inca (#c4a84a) son la luz dirigida que cae sobre cada figura, usados con parquedad para crear jerarquía y momento. Bebas da energía de póster de anime; DM Sans mantiene el catálogo limpio y respirando. Oscuro, otaku y premium: curaduría por encima de volumen. Rechaza el dropshipping genérico, el caos gritón tipo AliExpress/Temu y la frialdad SaaS azul-gris.",
+    "keyCharacteristics": [
+      "Lienzo nocturno profundo (Yoru), no gris genérico ni cream AI",
+      "Morado + dorado como luz dirigida, escasos y con intención",
+      "Profundidad por capas tonales y bordes de tinte, cero sombras",
+      "Display Bebas tipo cartel + cuerpo DM Sans limpio",
+      "Curaduría sobre volumen; el producto respira",
+      "Mobile-first; el pago cruza a WhatsApp con fricción mínima"
+    ],
+    "rules": [
+      { "name": "The Directed-Light Rule", "body": "Morado y dorado juntos ocupan ≤15% de cualquier pantalla. Son la luz que cae sobre las piezas, no el ambiente.", "section": "colors" },
+      { "name": "The Washi-Only-Light Rule", "body": "El único tono claro sobre superficies oscuras es Washi (#f2ebe0) y su versión apagada Ash. Prohibido blanco puro para texto de cuerpo.", "section": "colors" },
+      { "name": "The Bebas-Is-For-Impact Rule", "body": "Bebas Neue solo en display y CTAs de peso. Bajo ~1.25rem, siempre DM Sans.", "section": "typography" },
+      { "name": "The No-Shadow Rule", "body": "Prohibidas las box-shadow proyectadas. Profundidad por escalón tonal y borde de línea. Única sombra: el stroke inset de .oni-stroke.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do usar Yoru (#12101e) como fondo base de todo — el negro-violáceo es el lienzo de la vitrina.",
+      "Do construir profundidad subiendo escalones tonales (Yoru → Kage → Surface) y con bordes oni-line de tinte morado.",
+      "Do reservar morado y dorado juntos a ≤15% de la pantalla (The Directed-Light Rule).",
+      "Do usar Washi (#f2ebe0) / Ash (#a79fb5) como únicos tonos claros; verificar contraste ≥4.5:1.",
+      "Do reservar Bebas para display y CTAs de peso; DM Sans para todo lo demás bajo ~1.25rem.",
+      "Do presentar el producto con aire y object-contain — curaduría, no compresión.",
+      "Do dar prefers-reduced-motion a marquesina, fades y sliders del hero."
+    ],
+    "donts": [
+      "Don't parecer dropshipping genérico: plantilla Shopify sosa, grillas de cards idénticas, stock photos, badges de descuento por todas partes, cero identidad.",
+      "Don't caer en caos gritón tipo AliExpress/Temu ni en frialdad SaaS azul-gris sin alma otaku.",
+      "Don't usar box-shadow proyectadas (The No-Shadow Rule).",
+      "Don't introducir blancos puros (#fff) para texto de cuerpo (excepción: dentro del botón WhatsApp).",
+      "Don't usar Inca Gold para CTAs — es joya, no botón; el morado manda las acciones.",
+      "Don't usar Bebas en texto corrido ni labels largos — ilegible en condensed a tamaño chico.",
+      "Don't apretar el catálogo en grillas infinitas; el volumen no es el valor, la curaduría sí.",
+      "Don't dejar inputs sin foco visible ni placeholders en gris tenue."
+    ]
+  }
+}
