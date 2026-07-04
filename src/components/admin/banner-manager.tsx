@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Loader2, Upload, Trash2, Plus, Save, X } from "lucide-react";
-import { saveBanner, deleteBanner } from "@/app/admin/actions";
+import { Loader2, Upload, Trash2, Plus, Save, X, ChevronUp, ChevronDown } from "lucide-react";
+import { saveBanner, deleteBanner, moveBanner } from "@/app/admin/actions";
 
 type Banner = {
   id: string;
@@ -40,8 +40,9 @@ export function BannerManager({ banners }: { banners: Banner[] }) {
       )}
 
       <div className="mt-5 space-y-3">
-        {banners.map((b) => (
+        {banners.map((b, i) => (
           <div key={b.id} className="flex items-center gap-3 rounded-oni border border-oni-line bg-oni-ink p-3">
+            <MoveBtns id={b.id} first={i === 0} last={i === banners.length - 1} />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={b.imageUrl} alt="" className="h-16 w-28 shrink-0 rounded object-cover" />
             <div className="min-w-0 flex-1">
@@ -65,6 +66,21 @@ function DeleteBtn({ id }: { id: string }) {
     <button onClick={() => start(() => deleteBanner(id))} className="grid h-8 w-8 place-items-center text-oni-ash hover:text-oni-red">
       {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
     </button>
+  );
+}
+
+function MoveBtns({ id, first, last }: { id: string; first: boolean; last: boolean }) {
+  const [pending, start] = useTransition();
+  const btn = "grid h-6 w-6 place-items-center rounded text-oni-ash enabled:hover:text-oni-red disabled:opacity-30";
+  return (
+    <div className="flex shrink-0 flex-col">
+      <button aria-label="Subir" disabled={first || pending} onClick={() => start(() => moveBanner(id, "up"))} className={btn}>
+        <ChevronUp className="h-4 w-4" />
+      </button>
+      <button aria-label="Bajar" disabled={last || pending} onClick={() => start(() => moveBanner(id, "down"))} className={btn}>
+        <ChevronDown className="h-4 w-4" />
+      </button>
+    </div>
   );
 }
 
@@ -108,7 +124,6 @@ function BannerForm({ initial, onClose }: { initial?: Banner; onClose: () => voi
         <label className="text-sm"><span className="mb-1 block text-oni-ash">Subtítulo</span><input value={f.subtitle} onChange={(e) => set("subtitle", e.target.value)} className={inp} /></label>
         <label className="text-sm"><span className="mb-1 block text-oni-ash">Texto del botón</span><input value={f.ctaText} onChange={(e) => set("ctaText", e.target.value)} className={inp} /></label>
         <label className="text-sm"><span className="mb-1 block text-oni-ash">Link del botón</span><input value={f.ctaHref} onChange={(e) => set("ctaHref", e.target.value)} placeholder="/catalogo" className={inp} /></label>
-        <label className="text-sm"><span className="mb-1 block text-oni-ash">Orden</span><input type="number" value={f.order} onChange={(e) => set("order", Number(e.target.value))} className={inp} /></label>
         <label className="flex items-end gap-2 text-sm"><input type="checkbox" checked={f.active} onChange={(e) => set("active", e.target.checked)} className="mb-2 h-4 w-4 accent-[#7b5ea7]" /> <span className="mb-2">Activo</span></label>
         <label className="flex items-end gap-2 text-sm sm:col-span-2"><input type="checkbox" checked={f.showText} onChange={(e) => set("showText", e.target.checked)} className="mb-2 h-4 w-4 accent-[#7b5ea7]" /> <span className="mb-2">Mostrar texto/botón encima <span className="text-oni-ash">(desactívalo si el banner ya trae el texto quemado en la imagen)</span></span></label>
       </div>
@@ -124,13 +139,20 @@ function BannerForm({ initial, onClose }: { initial?: Banner; onClose: () => voi
         </label>
       </div>
 
+      {/* El título solo es obligatorio si se muestra texto encima. Un banner con el
+          texto quemado en la imagen (showText off) solo necesita la imagen. */}
       <button
-        disabled={saving || !f.imageUrl || !f.title}
+        disabled={saving || !f.imageUrl || (f.showText && !f.title.trim())}
         onClick={() => startSave(async () => { await saveBanner({ id: initial?.id, ...f }); onClose(); })}
         className="mt-4 flex h-11 items-center justify-center gap-2 rounded-md bg-oni-red px-6 font-display tracking-wide text-white hover:bg-oni-red-dark disabled:opacity-50"
       >
         {saving ? <Loader2 className="h-5 w-5 animate-spin" /> : <><Save className="h-4 w-4" /> Guardar</>}
       </button>
+      {f.imageUrl && f.showText && !f.title.trim() && (
+        <p className="mt-2 text-xs text-oni-ash">
+          Falta el título, o desactiva “Mostrar texto/botón encima” si la imagen ya trae el texto.
+        </p>
+      )}
     </div>
   );
 }

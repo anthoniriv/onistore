@@ -53,8 +53,8 @@ export default async function ChancaditosPage({ searchParams }: { searchParams: 
           </div>
         </div>
         <p className="mt-3 max-w-xl text-sm text-oni-ash sm:text-base">
-          Outlet con pequeños detalles (caja golpeada, blister abierto, leve desgaste) y seminuevos ya abiertos, a precios
-          de demonio. La esencia está intacta — solo el precio cambió. 🔥
+          Productos con pequeños detalles (caja golpeada, blister abierto, leve desgaste) a precios de demonio. La esencia
+          está intacta — solo el precio cambió. 🔥
         </p>
       </div>
 

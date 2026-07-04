@@ -192,7 +192,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <dl className="mt-5 grid grid-cols-2 gap-y-2 border-t border-oni-line pt-5 text-sm">
             {p.brand && (<><dt className="text-oni-ash">Marca</dt><dd className="text-oni-bone">{p.brand}</dd></>)}
             {p.sku && (<><dt className="text-oni-ash">SKU</dt><dd className="text-oni-bone">{p.sku}</dd></>)}
-            <dt className="text-oni-ash">Categoría</dt><dd className="text-oni-bone">{p.category.name}</dd>
+            <dt className="text-oni-ash">Categoría</dt>
+            <dd className="text-oni-bone">
+              <Link href={`/catalogo?category=${p.category.slug}`} className="hover:text-oni-red-soft">{p.category.name}</Link>
+              {p.extraCategories.map(({ category }) => (
+                <span key={category.slug}>{" · "}
+                  <Link href={`/catalogo?category=${category.slug}`} className="hover:text-oni-red-soft">{category.name}</Link>
+                </span>
+              ))}
+            </dd>
             {p.subcategory && (<><dt className="text-oni-ash">Subcategoría</dt><dd className="text-oni-bone">{p.subcategory}</dd></>)}
             <dt className="text-oni-ash">Disponibilidad</dt>
             <dd className="text-oni-bone">{state.isPreorder ? "Preventa" : state.soldOut ? "Agotado" : `${p.stock} en stock`}</dd>

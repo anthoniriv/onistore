@@ -57,6 +57,7 @@ type ProductInput = {
   images: string[]; // urls
   genreIds: string[];
   tagIds: string[];
+  extraCategoryIds: string[]; // categorías adicionales (además de categoryId)
 };
 
 /** Crea (o reutiliza) un tag por nombre y lo devuelve. Para asignar al vuelo desde el form. */
@@ -98,6 +99,9 @@ export async function saveProduct(input: ProductInput) {
     active: input.active,
   };
 
+  // Adicionales sin la principal (evita duplicar la categoría base).
+  const extraIds = [...new Set(input.extraCategoryIds)].filter((id) => id !== input.categoryId);
+
   if (input.id) {
     await prisma.product.update({ where: { id: input.id }, data });
     await prisma.productImage.deleteMany({ where: { productId: input.id } });
@@ -115,6 +119,11 @@ export async function saveProduct(input: ProductInput) {
       await prisma.productTag.createMany({
         data: input.tagIds.map((tagId) => ({ productId: input.id!, tagId })),
       });
+    await prisma.productCategory.deleteMany({ where: { productId: input.id } });
+    if (extraIds.length)
+      await prisma.productCategory.createMany({
+        data: extraIds.map((categoryId) => ({ productId: input.id!, categoryId })),
+      });
   } else {
     const slug = `${slugify(input.name)}-${Date.now().toString(36)}`;
     await prisma.product.create({
@@ -124,6 +133,7 @@ export async function saveProduct(input: ProductInput) {
         images: { create: input.images.map((url, i) => ({ url, order: i })) },
         genres: { create: input.genreIds.map((genreId) => ({ genreId })) },
         tags: { create: input.tagIds.map((tagId) => ({ tagId })) },
+        extraCategories: { create: extraIds.map((categoryId) => ({ categoryId })) },
       },
     });
   }
@@ -188,6 +198,13 @@ export async function setProductsChancadito(ids: string[], isChancadito: boolean
   revalidateCatalog();
 }
 
+export async function setProductsFeatured(ids: string[], featured: boolean) {
+  await requireAdmin();
+  if (!ids.length) return;
+  await prisma.product.updateMany({ where: { id: { in: ids } }, data: { featured } });
+  revalidateCatalog();
+}
+
 // ----------------------------- Pedidos -----------------------------
 
 export async function setOrderStatus(id: string, status: string) {
@@ -243,16 +260,51 @@ export async function saveBanner(input: {
     active: input.active,
     showText: input.showText,
   };
-  if (input.id) await prisma.banner.update({ where: { id: input.id }, data });
-  else await prisma.banner.create({ data });
-  revalidateTag("banners", "max");
-  revalidatePath("/admin/banners");
-  revalidatePath("/");
+  if (input.id) {
+    await prisma.banner.update({ where: { id: input.id }, data });
+  } else {
+    // Nuevo banner: entra al final para no colisionar con órdenes existentes.
+    const max = await prisma.banner.aggregate({ _max: { order: true } });
+    await prisma.banner.create({ data: { ...data, order: (max._max.order ?? 0) + 1 } });
+  }
+  await normalizeBannerOrders();
+  revalidateBanners();
 }
 
 export async function deleteBanner(id: string) {
   await requireAdmin();
   await prisma.banner.delete({ where: { id } });
+  await normalizeBannerOrders();
+  revalidateBanners();
+}
+
+/** Sube o baja un banner una posición; deja los órdenes consecutivos 1..n. */
+export async function moveBanner(id: string, dir: "up" | "down") {
+  await requireAdmin();
+  const all = await prisma.banner.findMany({
+    orderBy: [{ order: "asc" }, { createdAt: "asc" }],
+    select: { id: true },
+  });
+  const idx = all.findIndex((b) => b.id === id);
+  const swap = dir === "up" ? idx - 1 : idx + 1;
+  if (idx < 0 || swap < 0 || swap >= all.length) return;
+  [all[idx], all[swap]] = [all[swap], all[idx]];
+  await Promise.all(all.map((b, i) => prisma.banner.update({ where: { id: b.id }, data: { order: i + 1 } })));
+  revalidateBanners();
+}
+
+/** Renumera todos los banners 1..n según su orden actual (elimina huecos y duplicados). */
+async function normalizeBannerOrders() {
+  const all = await prisma.banner.findMany({
+    orderBy: [{ order: "asc" }, { createdAt: "asc" }],
+    select: { id: true, order: true },
+  });
+  await Promise.all(
+    all.map((b, i) => (b.order === i + 1 ? null : prisma.banner.update({ where: { id: b.id }, data: { order: i + 1 } }))).filter(Boolean)
+  );
+}
+
+function revalidateBanners() {
   revalidateTag("banners", "max");
   revalidatePath("/admin/banners");
   revalidatePath("/");

@@ -36,7 +36,7 @@ export function ProductCard({ product }: { product: CardProduct }) {
 
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-oni border border-oni-line bg-oni-ink transition-colors hover:border-oni-red/60">
-      <Link href={`/producto/${product.slug}`} className="relative block aspect-square overflow-hidden bg-oni-surface">
+      <Link href={`/producto/${product.slug}`} className="relative block aspect-[3/4] overflow-hidden bg-oni-surface">
         {img ? (
           <Image
             src={img}
@@ -44,7 +44,7 @@ export function ProductCard({ product }: { product: CardProduct }) {
             fill
             unoptimized={isSvg}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-            className="object-contain p-2 transition-transform duration-300 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
           />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-oni-ash">

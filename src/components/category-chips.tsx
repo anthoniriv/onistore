@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { Swords, BookOpen, Disc, Sparkles, Bookmark, LayoutGrid, type LucideIcon } from "lucide-react";
+import { Swords, BookOpen, Disc, Disc3, Sparkles, Bookmark, LayoutGrid, type LucideIcon } from "lucide-react";
 
 const ICONS: Record<string, LucideIcon> = {
   Swords,
   BookOpen,
   Disc,
+  Disc3,
   Sparkles,
   Bookmark,
 };

@@ -30,10 +30,19 @@ export async function getCatalog(params: CatalogParams) {
   const page = Math.max(1, params.page ?? 1);
 
   const where: Prisma.ProductWhereInput = { active: true };
-  if (params.category) where.category = { slug: params.category };
+  // Cada cláusula con su propio OR va al array AND para no pisarse entre sí.
+  const and: Prisma.ProductWhereInput[] = [];
+
+  // Categoría: coincide con la principal O con una adicional.
+  if (params.category)
+    and.push({
+      OR: [
+        { category: { slug: params.category } },
+        { extraCategories: { some: { category: { slug: params.category } } } },
+      ],
+    });
   if (params.condition) where.condition = params.condition;
-  // Chancaditos = outlet (con detalle) + seminuevos (ya abiertos).
-  if (params.chancaditos) where.OR = [{ isChancadito: true }, { condition: "SEMINUEVO" }];
+  if (params.chancaditos) where.isChancadito = true;
   if (params.tag) where.tags = { some: { tag: { slug: params.tag } } };
   if (params.genre) where.genres = { some: { genre: { slug: params.genre } } };
   if (params.brand) where.brand = params.brand;
@@ -46,16 +55,17 @@ export async function getCatalog(params: CatalogParams) {
   }
   if (params.q) {
     const tokens = params.q.trim().split(/\s+/).filter(Boolean);
-    if (tokens.length)
-      where.AND = tokens.map((t) => ({
+    for (const t of tokens)
+      and.push({
         OR: [
           { name: { contains: t } },
           { anime: { contains: t } },
           { brand: { contains: t } },
           { description: { contains: t } },
         ],
-      }));
+      });
   }
+  if (and.length) where.AND = and;
 
   // Filtro de precio sobre priceCents (aprox; el efectivo se calcula en UI)
   if (params.min != null || params.max != null) {
@@ -97,6 +107,7 @@ export const getProductBySlug = cache(async (slug: string) => {
     include: {
       images: { orderBy: { order: "asc" } },
       category: true,
+      extraCategories: { include: { category: true } },
       tags: { include: { tag: true } },
       genres: { include: { genre: true } },
     },
@@ -185,10 +196,10 @@ export async function getLatest(take = 10) {
 }
 
 export async function getChancaditos(take = 8) {
-  // Zona Chancaditos: outlet (items con detalle) + seminuevos (ya abiertos).
+  // Zona Chancaditos: solo outlet (items con detalle).
   return prisma.product.findMany({
     relationLoadStrategy: "join",
-    where: { active: true, OR: [{ isChancadito: true }, { condition: "SEMINUEVO" }] },
+    where: { active: true, isChancadito: true },
     include: { images: { take: 1, orderBy: { order: "asc" } }, category: true },
     take,
   });

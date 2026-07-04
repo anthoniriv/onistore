@@ -16,13 +16,14 @@ datasource db {
 // ----------------------------- Catálogo -----------------------------
 
 model Category {
-  id        String    @id @default(cuid())
-  slug      String    @unique
-  name      String
-  icon      String? // nombre de icono lucide
-  order     Int       @default(0)
-  products  Product[]
-  createdAt DateTime  @default(now())
+  id            String            @id @default(cuid())
+  slug          String            @unique
+  name          String
+  icon          String? // nombre de icono lucide
+  order         Int               @default(0)
+  products      Product[]
+  extraProducts ProductCategory[]
+  createdAt     DateTime          @default(now())
 }
 
 model Product {
@@ -54,13 +55,15 @@ model Product {
   isChancadito     Boolean @default(false)
   chancaditoReason String? // "Caja con detalle", "Sin blister"...
 
+  // Categoría principal (card, ficha, breadcrumb, SEO).
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])
 
-  images ProductImage[]
-  tags   ProductTag[]
-  genres ProductGenre[]
-  items  OrderItem[]
+  images          ProductImage[]
+  tags            ProductTag[]
+  genres          ProductGenre[]
+  extraCategories ProductCategory[] // categorías adicionales (aparece en varios filtros)
+  items           OrderItem[]
 
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
@@ -96,6 +99,17 @@ model ProductTag {
   tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@id([productId, tagId])
+}
+
+// Categorías adicionales de un producto (además de la principal categoryId).
+model ProductCategory {
+  productId  String
+  categoryId String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([productId, categoryId])
+  @@index([categoryId])
 }
 
 // Géneros / demografías (Shonen, Seinen, Terror, Romance, BL, GL...)

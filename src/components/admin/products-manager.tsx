@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Trash2, Eye, EyeOff, X } from "lucide-react";
+import { Trash2, Eye, EyeOff, X, Star, StarOff } from "lucide-react";
 import { formatPrice, CONDITION_LABEL, CONDITIONS } from "@/lib/utils";
 import { ProductRowActions } from "@/components/admin/product-row-actions";
 import {
@@ -10,6 +10,7 @@ import {
   setProductsCategory,
   setProductsCondition,
   setProductsChancadito,
+  setProductsFeatured,
 } from "@/app/admin/actions";
 
 type ProductRow = {
@@ -82,6 +83,9 @@ export function ProductsManager({
             <option value="">Condición…</option>
             {CONDITIONS.map((c) => <option key={c} value={c} className="bg-oni-ink">{CONDITION_LABEL[c]}</option>)}
           </select>
+
+          <button onClick={() => run(setProductsFeatured(ids(), true))} disabled={pending} className="flex items-center gap-1 rounded-md border border-oni-line px-2.5 py-1.5 text-xs hover:border-oni-gold"><Star className="h-3.5 w-3.5 text-oni-gold" /> Destacar</button>
+          <button onClick={() => run(setProductsFeatured(ids(), false))} disabled={pending} className="flex items-center gap-1 rounded-md border border-oni-line px-2.5 py-1.5 text-xs hover:border-oni-red"><StarOff className="h-3.5 w-3.5" /> Quitar destacado</button>
 
           <button onClick={() => run(setProductsChancadito(ids(), true))} disabled={pending} className="rounded-md border border-oni-line px-2.5 py-1.5 text-xs hover:border-oni-red">Marcar chancadito</button>
           <button onClick={() => run(setProductsChancadito(ids(), false))} disabled={pending} className="rounded-md border border-oni-line px-2.5 py-1.5 text-xs hover:border-oni-red">Quitar chancadito</button>

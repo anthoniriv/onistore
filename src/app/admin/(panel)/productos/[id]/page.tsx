@@ -8,7 +8,7 @@ import { ProductForm } from "@/components/admin/product-form";
 export default async function EditarProducto({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const [product, categories, genres, tags] = await Promise.all([
-    prisma.product.findUnique({ where: { id }, include: { images: { orderBy: { order: "asc" } }, genres: true, tags: true } }),
+    prisma.product.findUnique({ where: { id }, include: { images: { orderBy: { order: "asc" } }, genres: true, tags: true, extraCategories: true } }),
     getCategories(),
     getGenres(),
     getTags(),

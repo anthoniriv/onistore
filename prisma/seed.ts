@@ -30,8 +30,9 @@ async function main() {
       { slug: "figuras", name: "Figuras", icon: "Swords", order: 1 },
       { slug: "manga", name: "Manga", icon: "BookOpen", order: 2 },
       { slug: "blu-ray", name: "Blu-ray", icon: "Disc", order: 3 },
-      { slug: "anime-goods", name: "Anime Goods", icon: "Sparkles", order: 4 },
-      { slug: "bookarts", name: "Bookarts", icon: "Bookmark", order: 5 },
+      { slug: "cd", name: "CD", icon: "Disc3", order: 4 },
+      { slug: "anime-goods", name: "Anime Goods", icon: "Sparkles", order: 5 },
+      { slug: "bookarts", name: "Bookarts", icon: "Bookmark", order: 6 },
     ].map((c) => prisma.category.create({ data: c }))
   );
   const cat = (slug: string) => cats.find((c) => c.slug === slug)!.id;

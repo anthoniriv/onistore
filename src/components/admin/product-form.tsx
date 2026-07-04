@@ -31,6 +31,7 @@ type Initial = {
   images: { url: string }[];
   genres?: { genreId: string }[];
   tags?: { tagId: string }[];
+  extraCategories?: { categoryId: string }[];
 };
 
 type Genre = { id: string; name: string; kind: string };
@@ -63,6 +64,11 @@ export function ProductForm({ categories, genres = [], tags = [], initial }: { c
   const [genreIds, setGenreIds] = useState<string[]>(initial?.genres?.map((g) => g.genreId) ?? []);
   const toggleGenre = (id: string) =>
     setGenreIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+
+  // Categorías adicionales (además de la principal).
+  const [extraCategoryIds, setExtraCategoryIds] = useState<string[]>(initial?.extraCategories?.map((c) => c.categoryId) ?? []);
+  const toggleExtraCategory = (id: string) =>
+    setExtraCategoryIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
   // Tags (anime) — asignables desde el form, con creación al vuelo.
   const [allTags, setAllTags] = useState<Tag[]>(tags);
@@ -212,6 +218,7 @@ export function ProductForm({ categories, genres = [], tags = [], initial }: { c
         images,
         genreIds,
         tagIds,
+        extraCategoryIds,
       });
       router.push("/admin/productos");
       router.refresh();
@@ -294,6 +301,25 @@ export function ProductForm({ categories, genres = [], tags = [], initial }: { c
               </select>
             </L>
             <L label="Subcategoría"><input value={f.subcategory} onChange={(e) => set("subcategory", e.target.value)} placeholder="Ej. Nendoroid, Tankōbon" className={inp} /></L>
+          </div>
+        </Box>
+
+        <Box title="Categorías adicionales">
+          <p className="text-xs text-oni-ash">El producto también aparecerá en estas categorías, además de la principal.</p>
+          <div className="flex flex-wrap gap-2">
+            {categories.filter((c) => c.id !== f.categoryId).map((c) => {
+              const on = extraCategoryIds.includes(c.id);
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => toggleExtraCategory(c.id)}
+                  className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${on ? "border-oni-red bg-oni-red text-white" : "border-oni-line bg-oni-surface text-oni-bone hover:border-oni-red"}`}
+                >
+                  {c.name}
+                </button>
+              );
+            })}
           </div>
         </Box>
 

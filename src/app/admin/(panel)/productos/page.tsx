@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, Search, ChevronLeft, ChevronRight, FileSpreadsheet, FileJson } from "lucide-react";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { ProductsManager } from "@/components/admin/products-manager";
@@ -54,9 +54,25 @@ export default async function AdminProductos({ searchParams }: { searchParams: P
         <h1 className="font-display text-3xl">
           Productos <span className="text-base text-oni-ash">({total})</span>
         </h1>
-        <Link href="/admin/productos/nuevo" className="flex items-center gap-2 rounded-md bg-oni-red px-4 py-2.5 font-semibold text-white hover:bg-oni-red-dark">
-          <Plus className="h-4 w-4" /> Nuevo
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <a
+            href="/api/admin/export?format=xlsx"
+            className="flex items-center gap-2 rounded-md border border-oni-line px-3 py-2.5 text-sm font-semibold text-oni-bone hover:border-oni-red"
+            title="Exportar a Excel (una hoja por editorial)"
+          >
+            <FileSpreadsheet className="h-4 w-4 text-oni-gold" /> XLSX
+          </a>
+          <a
+            href="/api/admin/export?format=json"
+            className="flex items-center gap-2 rounded-md border border-oni-line px-3 py-2.5 text-sm font-semibold text-oni-bone hover:border-oni-red"
+            title="Exportar a JSON (agrupado por editorial)"
+          >
+            <FileJson className="h-4 w-4 text-oni-gold" /> JSON
+          </a>
+          <Link href="/admin/productos/nuevo" className="flex items-center gap-2 rounded-md bg-oni-red px-4 py-2.5 font-semibold text-white hover:bg-oni-red-dark">
+            <Plus className="h-4 w-4" /> Nuevo
+          </Link>
+        </div>
       </div>
 
       {/* Búsqueda server-side (GET) */}
